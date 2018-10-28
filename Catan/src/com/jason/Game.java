@@ -21,6 +21,7 @@ public class Game {
 	private Stage primaryStage;
 	private Scene setUpScene;
 	
+	
 	public Game(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 	}
@@ -28,6 +29,10 @@ public class Game {
 	public void startGame() {
 		// Setup Board and Players
 		setUp();
+		
+
+		
+		/*
 		
 		// While all players VP < 10
 		while(!isWinner) {
@@ -40,7 +45,7 @@ public class Game {
 					break;
 				}
 			}
-		}
+		} */
 	}
 	
 	public boolean getIsWinner() {
@@ -57,6 +62,7 @@ public class Game {
 		
 		// Roll dice to see who goes first
 		// Set up Board
+		
 		// Do first turn that has weird order
 		
 	}
@@ -111,7 +117,9 @@ public class Game {
 			
 			// Test to display player creation
 			for(Player player: players) {
-				System.out.println("Player Number " + (players.indexOf(player) + 1) + "\nPlayer Name: " + player.getName() + " Color: "+player.getColor() + "\n");
+				int die[] = player.roll();
+				System.out.println("Player Number " + (players.indexOf(player) + 1) + "\nPlayer Name: " + player.getName() +
+						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");
 			}
 		});
 		
