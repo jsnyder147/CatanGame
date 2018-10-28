@@ -30,10 +30,6 @@ public class Game {
 		// Setup Board and Players
 		setUp();
 		
-
-		
-		/*
-		
 		// While all players VP < 10
 		while(!isWinner) {
 			// Do each players turn
@@ -45,7 +41,7 @@ public class Game {
 					break;
 				}
 			}
-		} */
+		} 
 	}
 	
 	public boolean getIsWinner() {
@@ -62,12 +58,11 @@ public class Game {
 		
 		// Roll dice to see who goes first
 		// Set up Board
-		
 		// Do first turn that has weird order
 		
 	}
 	private void doTurn(Player player) {
-		
+		player.roll();
 	}
 	
 	// Method to setup the GUI
@@ -123,6 +118,7 @@ public class Game {
 			}
 		});
 		
+		// Display Player pane
 		setUpScene = new Scene(playerPane, 200, 400);
 		primaryStage.setScene(setUpScene);
 		primaryStage.show();
