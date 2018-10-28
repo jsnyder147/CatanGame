@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="/Users/jasonsnyder/Downloads/jxbrowser-6.22-cross-desktop-win_mac_linux/lib/jxbrowser-6.22.jar"/>
+	<classpathentry kind="lib" path="/Users/jasonsnyder/Downloads/jxbrowser-6.22-cross-desktop-win_mac_linux/lib/jxbrowser-linux64-6.22.jar"/>
+	<classpathentry kind="lib" path="/Users/jasonsnyder/Downloads/jxbrowser-6.22-cross-desktop-win_mac_linux/lib/jxbrowser-mac-6.22.jar"/>
+	<classpathentry kind="lib" path="/Users/jasonsnyder/Downloads/jxbrowser-6.22-cross-desktop-win_mac_linux/lib/jxbrowser-win32-6.22.jar"/>
+	<classpathentry kind="lib" path="/Users/jasonsnyder/Downloads/jxbrowser-6.22-cross-desktop-win_mac_linux/lib/jxbrowser-win64-6.22.jar"/>
+	<classpathentry kind="lib" path="/Users/jasonsnyder/Downloads/jxbrowser-6.22-cross-desktop-win_mac_linux/lib/license.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
