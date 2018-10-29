@@ -12,14 +12,15 @@ import javafx.scene.control.Button;
 
 public class Game {
 	
-	private final int numPlayers = 4;
-	private boolean isWinner;
+	private final int NUMBER_OF_PLAYERS = 4;
+	private boolean isWinner = false;
 	private Player winner;
 	private ArrayList<Player> players = new ArrayList<>();
 	private ArrayList<Label> lblPlayerNames = new ArrayList<>();
 	private ArrayList<TextField> tfPlayerNames = new ArrayList<>();
 	private Stage primaryStage;
 	private Scene setUpScene;
+	private Board board;
 	
 	
 	public Game(Stage primaryStage) {
@@ -30,18 +31,20 @@ public class Game {
 		// Setup Board and Players
 		setUp();
 		
+		/*
 		// While all players VP < 10
 		while(!isWinner) {
 			// Do each players turn
-			for(int i = 0; i < numPlayers; i++) {
+			for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
 				doTurn(players.get(i));
 				// if player wins end game
 				if(players.get(i).getVictoryPoints() >= 10) {
 					isWinner = true;
+					winner = players.get(i);
 					break;
 				}
 			}
-		} 
+		}  */
 	}
 	
 	public boolean getIsWinner() {
@@ -58,6 +61,7 @@ public class Game {
 		
 		// Roll dice to see who goes first
 		// Set up Board
+		
 		// Do first turn that has weird order
 		
 	}
@@ -76,7 +80,7 @@ public class Game {
 		Button btnContinue = new Button("Continue");
 		
 		// Create 4 labels and 4 text fields for player name entry
-		for(int i = 0; i < numPlayers; i++) {
+		for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
 			lblPlayerNames.add(new Label("Player " + (i + 1) + " Name: "));
 			tfPlayerNames.add(new TextField());
 			playerPane.getChildren().addAll(lblPlayerNames.get(i), tfPlayerNames.get(i));
@@ -90,7 +94,7 @@ public class Game {
 			
 			boolean allPlayersEntered = true;
 			// Check for valid entry
-			for(int i = 0; i < numPlayers; i++) {
+			for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
 				if(tfPlayerNames.get(i).getText().isEmpty()) {
 					allPlayersEntered = false;
 
@@ -105,7 +109,7 @@ public class Game {
 			
 			// If all players names have been entered create new players
 			if(allPlayersEntered) {
-				for(int i = 0; i< numPlayers; i++) {
+				for(int i = 0; i< NUMBER_OF_PLAYERS; i++) {
 					players.add(new Player(tfPlayerNames.get(i).getText()));
 				}	
 			}
@@ -115,6 +119,7 @@ public class Game {
 				int die[] = player.roll();
 				System.out.println("Player Number " + (players.indexOf(player) + 1) + "\nPlayer Name: " + player.getName() +
 						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");
+				board = new Board(primaryStage, 1000, 1000);
 			}
 		});
 		
