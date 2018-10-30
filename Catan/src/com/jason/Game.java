@@ -123,6 +123,7 @@ public class Game {
 			}
 			board = new Board(primaryStage, 1000, 1000);
 			board.createTiles();
+			board.createChits();
 		});
 		
 		// Display Player pane

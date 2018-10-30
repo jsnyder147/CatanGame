@@ -12,114 +12,88 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
+import javafx.scene.paint.Color;
 
 public class Board {
 	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
 	private final int[] TILE_TYPE_AMOUNTS = {1, 4, 4, 4, 3, 3};
-	private final int NUMBER_OF_HEXES = 19;
+	private final int[] CHIT_TYPE_AMOUNTS = {1,2,2,2,2,1,2,2,2,2,1};
+	private final int NUMBER_OF_CHITS = 18;
 	public int intersections[];
 	private Stage primaryStage;
 	private double width;
 	private double height;
 	private double origin[] = {0.0, 0.0};
-	private final double TOP_PADDING = 50;
-	
-	
 	private ArrayList<Tile> tiles = new ArrayList<>();
+	private ArrayList<Chit> chits = new ArrayList<>();
+	private Pane pane = new Pane();
 	
 	public Board(Stage primaryStage, double width, double height) {
 		
 		this.primaryStage = primaryStage;
 		this.width = width;
 		this.height = height;
-		origin[0] = width/2.0 - ((width/10.0)/2.0);
+		origin[0] = width/2.0 - ((width/7.0)/2.0);
 		origin[1] = height/10;
 	}
 	
 
 	
 	public void createTiles() {
+		// Set board width for tile binding
+		Tile.setDimensions(width);
+		
+		// Create Tiles
 		int count = 0;
 		for(int tileType : TILE_TYPE_AMOUNTS) {
 			for(int i = 0; i < tileType; i++) {
-				tiles.add(new Tile(width, primaryStage, count));
+				tiles.add(new Tile(primaryStage, count));
 			}
 			count++;
 		}
 		
+		// Shuffle Tiles
 		Collections.shuffle(tiles);
-
-		setTiles();
-	}
-	
-	private void setTiles() {
 		
-		double tileWidth = width/10.0;
-		double tileHeight = tileWidth;
-		double horizontalCenter = (width/2.0) - (tileWidth/2.0);
-		double y = TOP_PADDING;
-		double x = 0;
-		int tilesMade = 0;
-		int repeat = 0;
-		
-		// calculate origin for each tile in row
-		for(int i = 0; i < 9; i++) {
-			switch(i) {
-			// Rows with 1 tile
-			case 0:
-			case 8:
-				x = horizontalCenter;
-				repeat = 1;
-				break;
-			// Rows with 2 tiles
-			case 1:
-			case 3:
-			case 5:
-			case 7:
-				x = horizontalCenter - (tileWidth *.75);
-				repeat = 2;
-				break;
-			// Rows with 3 tiles
-			case 2:
-			case 4:
-			case 6:
-				x = horizontalCenter - ((tileWidth * 2) * .75);
-				repeat = 3;
-				break;
-				
-			}
-			
-			// Set points for row of tiles
-			for(int j = 0; j < repeat; j++) {
-				tiles.get(tilesMade).setOrigin(x, y);
-				tilesMade++;
-				x+= tileWidth * 1.5;
-			}
-			y += tileHeight *.5;
-
-		}
-		
-		// Test if tile points are correct by displaying to console
-		for(Tile tile:tiles) {
-			System.out.println(tile);
-			System.out.println("\n" + tile.getPoints());
-		}
+		// Place Tiles on Board
+		Tile.setTiles(tiles);
 		
 		// Test if tiles align by placing in pane and displaying
-		Pane pane = new Pane();
 		pane.setBackground(new Background(new BackgroundImage(BACKGROUND_IMAGE, BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 		for(Tile tile : tiles) {
 			pane.getChildren().add(tile);
-			
-			pane.getChildren().add(new Circle(tile.getCenterX(), tile.getCenterY(), 10));
 		}
 	
 		Scene scene = new Scene(pane, width, height);
 		primaryStage.setScene(scene);
-
 	}
-	private void setChits() {
+	
+	public void createChits() {
+		// Create Chits
+		int count = 0;
+		for(int chitType: CHIT_TYPE_AMOUNTS) {
+			for(int i = 0; i < chitType; i++) {
+				System.out.print(count + "    ");
+				chits.add(new Chit(count));
+			}
+			count++;
+		}
 		
+		// Shuffle Chits
+		Collections.shuffle(chits);
+		
+		// Set Chits on Board
+		int count2 = 0;
+		for(Chit chit : chits) {
+			System.out.println(chit);
+			chit.setCenterX(tiles.get(count2).getCenterX());
+			chit.setCenterY(tiles.get(count2).getCenterY());
+			chit.setRadius(20);
+			chit.setImage();
+			pane.getChildren().add(chit);
+			count2++;
+		}
 	}
+
 }
