@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
+import javafx.scene.control.Button;
 
 public class Board {
 	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
@@ -26,6 +27,7 @@ public class Board {
 	private ArrayList<Tile> tiles = new ArrayList<>();
 	private ArrayList<Chit> chits = new ArrayList<>();
 	private Pane pane = new Pane();
+	private ArrayList<Button> intersectionButtons = new ArrayList<>();
 	
 	public Board(Stage primaryStage, double width, double height) {
 		
@@ -35,8 +37,6 @@ public class Board {
 		origin[0] = width/2.0 - ((width/7.0)/2.0);
 		origin[1] = height/10;
 	}
-	
-
 	
 	public void createTiles() {
 		// Set board width for tile binding
@@ -61,8 +61,10 @@ public class Board {
 		pane.setBackground(new Background(new BackgroundImage(BACKGROUND_IMAGE, BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 		for(Tile tile : tiles) {
+			System.out.println(tile.getPoints() + "\n");
 			pane.getChildren().add(tile);
 		}
+		
 	
 		Scene scene = new Scene(pane, width, height);
 		primaryStage.setScene(scene);
@@ -96,7 +98,13 @@ public class Board {
 	}
 	
 	public void setIntersections() {
+		// create buttons on all points of first tile
+			int count = 0;
+			for(Double point : tiles.get(0).getPoints()) {
+				System.out.println("Point " + count + ": " + point);
+			}
 		
+		// create buttons on all points of rest of tiles that don't have intersection == any other buttons
 	}
 
 }
