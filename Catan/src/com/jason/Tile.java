@@ -1,11 +1,6 @@
 package com.jason;
 
 import javafx.scene.shape.Polygon;
-
-import java.util.ArrayList;
-
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -31,6 +26,7 @@ public class Tile extends Polygon{
 		
 	}
 	
+	// set tile type, int value correlates with image for tile
 	public int getTileType() {
 		return tileType;
 	}
@@ -42,10 +38,15 @@ public class Tile extends Polygon{
 	}
 	
 	private void setPoints(){
+		
+		// get origin of tile as start point
 		double x = origin[0];
 		double y = origin[1];
+		// set center of tile
 		center[0] = (x + width/2.0);
 		center[1] = (y + height/2.0);
+		
+		// set points of hexagon
 		this.getPoints().addAll(new Double[] {
 				x + (width * .25), y,
 				x + (width * .75), y,
@@ -54,6 +55,8 @@ public class Tile extends Polygon{
 				x + (width * .25), y + height,
 				x, y + (height *.5) 
 		});
+		
+		// set image of tile
 		this.setFill(new ImagePattern(tileImages[tileType], 0, 0, 1, 1, true));
 		
 	}

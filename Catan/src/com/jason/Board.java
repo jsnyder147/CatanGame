@@ -2,7 +2,6 @@ package com.jason;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import javafx.scene.Group;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
@@ -62,13 +61,17 @@ public class Board {
 		double x = 0;
 		int tilesMade = 0;
 		int repeat = 0;
+		
+		// calculate origin for each tile in row
 		for(int i = 0; i < 9; i++) {
 			switch(i) {
+			// Rows with 1 tile
 			case 0:
 			case 8:
 				x = horizontalCenter;
 				repeat = 1;
 				break;
+			// Rows with 2 tiles
 			case 1:
 			case 3:
 			case 5:
@@ -76,6 +79,7 @@ public class Board {
 				x = horizontalCenter - (tileWidth *.75);
 				repeat = 2;
 				break;
+			// Rows with 3 tiles
 			case 2:
 			case 4:
 			case 6:
@@ -85,6 +89,7 @@ public class Board {
 				
 			}
 			
+			// Set points for row of tiles
 			for(int j = 0; j < repeat; j++) {
 				tiles.get(tilesMade).setOrigin(x, y);
 				tilesMade++;
@@ -94,12 +99,13 @@ public class Board {
 
 		}
 		
-		
+		// Test if tile points are correct by displaying to console
 		for(Tile tile:tiles) {
 			System.out.println(tile);
 			System.out.println("\n" + tile.getPoints());
 		}
 		
+		// Test if tiles align by placing in pane and displaying
 		Pane pane = new Pane();
 		pane.setBackground(new Background(new BackgroundImage(BACKGROUND_IMAGE, BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
@@ -108,7 +114,7 @@ public class Board {
 			
 			pane.getChildren().add(new Circle(tile.getCenterX(), tile.getCenterY(), 10));
 		}
-		
+	
 		Scene scene = new Scene(pane, width, height);
 		primaryStage.setScene(scene);
 
