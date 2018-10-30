@@ -12,6 +12,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Circle;
 
 public class Board {
 	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
@@ -104,7 +105,10 @@ public class Board {
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 		for(Tile tile : tiles) {
 			pane.getChildren().add(tile);
+			
+			pane.getChildren().add(new Circle(tile.getCenterX(), tile.getCenterY(), 10));
 		}
+		
 		Scene scene = new Scene(pane, width, height);
 		primaryStage.setScene(scene);
 
