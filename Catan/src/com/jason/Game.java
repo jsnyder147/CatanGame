@@ -119,8 +119,10 @@ public class Game {
 				int die[] = player.roll();
 				System.out.println("Player Number " + (players.indexOf(player) + 1) + "\nPlayer Name: " + player.getName() +
 						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");
-				board = new Board(primaryStage, 1000, 1000);
+
 			}
+			board = new Board(primaryStage, 1000, 1000);
+			board.createTiles();
 		});
 		
 		// Display Player pane
