@@ -61,7 +61,10 @@ public class Game {
 		
 		// Roll dice to see who goes first
 		// Set up Board
-		
+		board = new Board(primaryStage, 1000, 1000);
+		board.createTiles();
+		board.createChits();
+		board.setIntersections();
 		// Do first turn that has weird order
 		
 	}
@@ -121,9 +124,7 @@ public class Game {
 						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");
 
 			}
-			board = new Board(primaryStage, 1000, 1000);
-			board.createTiles();
-			board.createChits();
+			
 		});
 		
 		// Display Player pane

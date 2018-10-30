@@ -18,7 +18,6 @@ public class Board {
 	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
 	private final int[] TILE_TYPE_AMOUNTS = {1, 4, 4, 4, 3, 3};
 	private final int[] CHIT_TYPE_AMOUNTS = {1,2,2,2,2,1,2,2,2,2,1};
-	private final int NUMBER_OF_CHITS = 18;
 	public int intersections[];
 	private Stage primaryStage;
 	private double width;
@@ -94,6 +93,10 @@ public class Board {
 			pane.getChildren().add(chit);
 			count2++;
 		}
+	}
+	
+	public void setIntersections() {
+		
 	}
 
 }

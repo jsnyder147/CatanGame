@@ -17,8 +17,6 @@ public class Tile extends Polygon{
 	private static double boardHeight;
 	private double width;
 	private double height;
-	private double points[] = {0,0,0,0,0,0};
-	private int number;
 	private double origin[] = {0,0};
 	private String tileTypeNames[] = {"Desert", "Field", "Forest", "Pasture", "Hill", "Mountain"};
 	private double center[] = {0,0};
