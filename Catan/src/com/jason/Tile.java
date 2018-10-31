@@ -20,6 +20,7 @@ public class Tile extends Polygon{
 	private double origin[] = {0,0};
 	private String tileTypeNames[] = {"Desert", "Field", "Forest", "Pasture", "Hill", "Mountain"};
 	private double center[] = {0,0};
+	private Chit chit;
 
 	
 	public Tile(Stage primaryStage, int tileType) {
@@ -124,6 +125,10 @@ public class Tile extends Polygon{
 		boardWidth = width;
 		boardHeight = boardWidth;
 		
+	}
+	
+	public void setChit(Chit chit) {
+		this.chit = chit;
 	}
 	
 	@Override
