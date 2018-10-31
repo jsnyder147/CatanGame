@@ -11,31 +11,35 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
-import javafx.scene.shape.Circle;
-import javafx.scene.paint.Color;
-import javafx.scene.control.Button;
 
 public class Board {
+	
 	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
+	
+	// Amount of each type of tile and chit
 	private final int[] TILE_TYPE_AMOUNTS = {1, 4, 4, 4, 3, 3};
-	private final int[] CHIT_TYPE_AMOUNTS = {1,2,2,2,2,1,2,2,2,2,1};
+	private final int[] CHIT_TYPE_AMOUNTS = {1,2,2,2,2,2,2,2,2,1};
+	
 	public int intersections[];
-	private Stage primaryStage;
+
+	// Board width and height
 	private double width;
 	private double height;
-	private double origin[] = {0.0, 0.0};
+	
+	// List of Tiles and Chits
 	private ArrayList<Tile> tiles = new ArrayList<>();
 	private ArrayList<Chit> chits = new ArrayList<>();
+	
+	// Pane and stage to display Tiles, chits, and intersections
+	// will be moved to game after testing is complete
+	private Stage primaryStage;
 	private Pane pane = new Pane();
-	private ArrayList<Button> intersectionButtons = new ArrayList<>();
 	
 	public Board(Stage primaryStage, double width, double height) {
 		
 		this.primaryStage = primaryStage;
 		this.width = width;
 		this.height = height;
-		origin[0] = width/2.0 - ((width/7.0)/2.0);
-		origin[1] = height/10;
 	}
 	
 	public void createTiles() {
@@ -77,6 +81,7 @@ public class Board {
 			for(int i = 0; i < chitType; i++) {
 				System.out.print(count + "    ");
 				chits.add(new Chit(count));
+
 			}
 			count++;
 		}
@@ -85,26 +90,40 @@ public class Board {
 		Collections.shuffle(chits);
 		
 		// Set Chits on Board
-		int count2 = 0;
+		int tileCount = 0;
 		for(Chit chit : chits) {
+			Tile currentTile = tiles.get(tileCount);
 			System.out.println(chit);
-			chit.setCenterX(tiles.get(count2).getCenterX());
-			chit.setCenterY(tiles.get(count2).getCenterY());
+			
+			// If Tile is Desert skip tile by increasing tile count
+			// So that a chit is not placed on tile
+			if(currentTile.getTileType() == 0) {
+				Chit thief = new Chit(10);
+				thief.setCenterX(currentTile.getCenterX());
+				thief.setCenterY(currentTile.getCenterY());
+				thief.setRadius(30);
+				thief.setThief();
+				currentTile.setChit(thief);
+				pane.getChildren().add(thief);
+				tileCount++;
+				currentTile = tiles.get(tileCount);
+
+			}
+			// Place chit on tile
+			chit.setCenterX(currentTile.getCenterX());
+			chit.setCenterY(currentTile.getCenterY());
 			chit.setRadius(20);
 			chit.setImage();
 			pane.getChildren().add(chit);
-			count2++;
+			currentTile.setChit(chit);
+			tileCount++;
 		}
+
 	}
 	
 	public void setIntersections() {
-		// create buttons on all points of first tile
-			int count = 0;
-			for(Double point : tiles.get(0).getPoints()) {
-				System.out.println("Point " + count + ": " + point);
-			}
+		// Make interactive intersections
 		
-		// create buttons on all points of rest of tiles that don't have intersection == any other buttons
 	}
 
 }

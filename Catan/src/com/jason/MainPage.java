@@ -1,10 +1,8 @@
 package com.jason;
 
 import javafx.geometry.Pos;
-
 import com.teamdev.jxbrowser.chromium.Browser;
 import com.teamdev.jxbrowser.chromium.javafx.BrowserView;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -19,7 +17,6 @@ public class MainPage extends Application{
 
 	// Background Image
 	private final Image backgroundImage = new Image("com/jason/resource/mainBackground.jpg");
-	private final String helpPDF ="http://www.ultracatan.com/game-rules.php";
 
 	
 	public static void main(String[] args) {
@@ -43,9 +40,11 @@ public class MainPage extends Application{
 		mainPane.setBackground(new Background(new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 		
+		// Place help and start buttons
 		mainPane.setBottom(btnStart);
 		mainPane.setTop(btnHelp);
 
+		// Display start screen
 		Scene scene = new Scene(mainPane, 600, 600);
 		primaryStage.setScene(scene);
 		primaryStage.show();

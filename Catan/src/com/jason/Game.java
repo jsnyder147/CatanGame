@@ -60,12 +60,15 @@ public class Game {
 		setUpGUI();
 		
 		// Roll dice to see who goes first
+		
+		
 		// Set up Board
 		board = new Board(primaryStage, 1000, 1000);
 		board.createTiles();
 		board.createChits();
 		board.setIntersections();
 		// Do first turn that has weird order
+		
 		
 	}
 	private void doTurn(Player player) {
@@ -91,6 +94,10 @@ public class Game {
 		
 		// Add Button to flow pane
 		playerPane.getChildren().add(btnContinue);
+		// Display Player pane
+		setUpScene = new Scene(playerPane, 200, 400);
+		primaryStage.setScene(setUpScene);
+		primaryStage.show();
 		
 		// set button event listener
 		btnContinue.setOnAction(e -> {
@@ -104,6 +111,7 @@ public class Game {
 					
 					
 					// Need to Add: Change Text Field Border Color to Red
+					// If Any Player names haven't been entered
 					
 										
 					
@@ -127,10 +135,7 @@ public class Game {
 			
 		});
 		
-		// Display Player pane
-		setUpScene = new Scene(playerPane, 200, 400);
-		primaryStage.setScene(setUpScene);
-		primaryStage.show();
+		
 		
 	}
 	
