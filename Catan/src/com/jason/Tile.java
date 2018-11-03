@@ -4,7 +4,9 @@ import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 
@@ -18,14 +20,17 @@ public class Tile extends Polygon{
 	private double width;
 	private double height;
 	private double origin[] = {0,0};
-	private String tileTypeNames[] = {"Desert", "Field", "Forest", "Pasture", "Hill", "Mountain"};
+	private String tileTypeNames[] = {"Desert", "Field", "Forest", "Pasture", "Mountain", "Hill"};
 	private double center[] = {0,0};
 	private Chit chit;
+	private int intersect[][] = {{0,0},{0,0}, {0,0}, {0,0}, {0,0}, {0,0}};
+	private String tileName = "";
 
 	
 	public Tile(Stage primaryStage, int tileType) {
 
 		this.tileType = tileType;
+
 		width = boardWidth / 7.0;
 		height = width;
 		
@@ -108,9 +113,27 @@ public class Tile extends Polygon{
 				x, y + (height *.5) 
 		});
 		
+		setIntersections();
+		
 		// set image of tile
 		this.setFill(new ImagePattern(tileImages[tileType], 0, 0, 1, 1, true));
 		
+	}
+	
+	private void setIntersections() {
+		List<Double> list = this.getPoints();
+		int count = 0;
+		for(int i = 0; i<list.size(); i+=2) {
+			double x = list.get(i);
+			double y = list.get(i+1);
+			intersect[count][0] = (int)x;
+			intersect[count][1] = (int)y;
+			count++;
+		}
+	}
+	
+	public int[][] getInersections() {
+		return intersect;
 	}
 	
 	public double getCenterX() {
@@ -125,6 +148,10 @@ public class Tile extends Polygon{
 		boardWidth = width;
 		boardHeight = boardWidth;
 		
+	}
+	
+	public Chit getChit() {
+		return chit;
 	}
 	
 	public void setChit(Chit chit) {
