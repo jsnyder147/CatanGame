@@ -25,9 +25,11 @@ public class Tile extends Polygon{
 	private Chit chit;
 	private int intersect[][] = {{0,0},{0,0}, {0,0}, {0,0}, {0,0}, {0,0}};
 	private String tileName = "";
+	private static Stage stage;
 
 	
-	public Tile(Stage primaryStage, int tileType) {
+	public Tile(int tileType) {
+		stage = Board.getStage();
 
 		this.tileType = tileType;
 

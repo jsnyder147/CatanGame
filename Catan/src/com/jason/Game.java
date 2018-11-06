@@ -18,13 +18,18 @@ public class Game {
 	private ArrayList<Player> players = new ArrayList<>();
 	private ArrayList<Label> lblPlayerNames = new ArrayList<>();
 	private ArrayList<TextField> tfPlayerNames = new ArrayList<>();
-	private Stage primaryStage;
-	private Scene setUpScene;
+	private static Stage stage;
+	private static Scene gameScene;
+	private static Scene mainMenuScene;
 	private Board board;
+
 	
 	
-	public Game(Stage primaryStage) {
-		this.primaryStage = primaryStage;
+	public Game() {
+		mainMenuScene = MainPage.getScene();
+		stage = MainPage.getStage();
+		
+
 	}
 	
 	public void startGame() {
@@ -63,7 +68,7 @@ public class Game {
 		
 		
 		// Set up Board
-		board = new Board(primaryStage, 1000, 1000);
+		board = new Board(800, 800);
 		board.createTiles();
 		board.createChits();
 		board.setIntersections();
@@ -95,9 +100,9 @@ public class Game {
 		// Add Button to flow pane
 		playerPane.getChildren().add(btnContinue);
 		// Display Player pane
-		setUpScene = new Scene(playerPane, 200, 400);
-		primaryStage.setScene(setUpScene);
-		primaryStage.show();
+		gameScene = new Scene(playerPane, 200, 400);
+		stage.setScene(gameScene);
+		stage.show();
 		
 		// set button event listener
 		btnContinue.setOnAction(e -> {
@@ -137,6 +142,15 @@ public class Game {
 		
 		
 		
+	}
+	
+	// Getters for stage and scene
+	public static Stage getStage() {
+		return stage;
+	}
+	
+	public static Scene getScene() {
+		return gameScene;
 	}
 	
 }

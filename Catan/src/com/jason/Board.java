@@ -42,12 +42,13 @@ public class Board {
 	
 	// Pane and stage to display Tiles, chits, and intersections
 	// will be moved to game after testing is complete
-	private Stage primaryStage;
+	private static Stage stage;
+	private static Scene gameScene;
 	private Pane pane = new Pane();
 	
-	public Board(Stage primaryStage, double width, double height) {
-		
-		this.primaryStage = primaryStage;
+	public Board(double width, double height) {
+		gameScene = Game.getScene();
+		stage = Game.getStage();
 		this.width = width;
 		this.height = height;
 	}
@@ -60,7 +61,7 @@ public class Board {
 		int count = 0;
 		for(int tileType : TILE_TYPE_AMOUNTS) {
 			for(int i = 0; i < tileType; i++) {
-				tiles.add(new Tile(primaryStage, count));
+				tiles.add(new Tile(count));
 			}
 			count++;
 		}
@@ -82,7 +83,7 @@ public class Board {
 	
 		Scene scene = new Scene(pane, width, height);
 		scene.getStylesheets().add("/com/jason/resource/catan.css");
-		primaryStage.setScene(scene);
+		stage.setScene(scene);
 	}
 	
 	public void createChits() {
@@ -288,6 +289,15 @@ public class Board {
 			//return details;
 			//return "Intersection " + intersectionNumber + ": Connected tiles: " + connectedTile + "(" + point[0] + ", " + point[1] + ")\n";
 		}
+	}
+	
+	// Getter for Scene and Stage
+	public static Stage getStage() {
+		return stage;
+	}
+	
+	public static Scene getScene() {
+		return gameScene;
 	}
 
 }
