@@ -2,6 +2,7 @@ package com.jason;
 
 import java.util.ArrayList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
@@ -10,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.control.Button;
+
 
 public class Game {
 	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
@@ -24,6 +26,7 @@ public class Game {
 	private static Scene mainMenuScene;
 	private Board board;
 	private static BorderPane gamePane;
+	private Button btnContinue;
 
 	
 	
@@ -83,16 +86,19 @@ public class Game {
 	private void setUpGUI() {
 		
 		gamePane = new BorderPane();
+		gamePane.getStylesheets().add("com/jason/resource/catan.css");
 		
 		// Pane for Player Name Entry
-		FlowPane playerPane = new FlowPane(5, 5);
+		VBox playerPane = new VBox();
 		playerPane.setPadding(new Insets(5,5,5,5));
+		playerPane.getStyleClass().add("playerNamePane");
+		
 		
 		// Test if tiles align by placing in pane and displaying
 		gamePane.setBackground(new Background(new BackgroundImage(BACKGROUND_IMAGE, BackgroundRepeat.NO_REPEAT,
 			BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
-		Button btnContinue = new Button("Continue");
+		btnContinue = new Button("Continue");
 		
 		// Create 4 labels and 4 text fields for player name entry
 		for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
@@ -104,8 +110,10 @@ public class Game {
 		// Add Button to flow pane
 		playerPane.getChildren().add(btnContinue);
 		gamePane.setLeft(playerPane);
+		
 		// Display Player pane
-		gameScene = new Scene(gamePane, 900, 900);
+		BorderPane.setAlignment(playerPane, Pos.CENTER);
+		gameScene = new Scene(gamePane, 900, 1200);
 		stage.setScene(gameScene);
 		stage.show();
 		
@@ -132,8 +140,15 @@ public class Game {
 			if(allPlayersEntered) {
 				for(int i = 0; i< NUMBER_OF_PLAYERS; i++) {
 					players.add(new Player(tfPlayerNames.get(i).getText()));
-				}	
-				board = new Board(800, 800);
+				}
+				
+				// Remove Player info from sidePane
+				playerPane.getChildren().removeAll(lblPlayerNames);
+				playerPane.getChildren().removeAll(tfPlayerNames);
+				playerPane.getChildren().remove(btnContinue);
+
+				// Create Board
+				board = new Board(1000, 1000);
 				board.createTiles();
 				board.createChits();
 				board.setIntersections();

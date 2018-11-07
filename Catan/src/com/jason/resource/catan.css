@@ -7,3 +7,17 @@
  .button:disabled, .button-disabled > * {
  	-fx-opacity: 1.0;
  }
+
+ .playerNamePane{
+ 	-fx-background-color:#e3e5ed;
+ 	-fx-effect: innershadow(gaussian, rgba(0,0,0,0.7),10,0,0,0);
+ }
+
+ .VBox {
+ 	alignment:center;
+ 	padding:15;
+ }
+
+ .BorderPane {
+ 	padding:20;
+ }

@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.geometry.Pos;
 
 public class Board {
 	
@@ -83,6 +84,7 @@ public class Board {
 		}
 		
 		gamePane.setCenter(pane);
+		gamePane.setAlignment(pane, Pos.CENTER);
 		//Scene scene = new Scene(pane, width, height);
 		//scene.getStylesheets().add("/com/jason/resource/catan.css");
 		//stage.setScene(scene);
