@@ -1,15 +1,15 @@
 package com.jason;
 
-import javafx.geometry.Pos;
+
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+
 import javafx.scene.control.Button;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
+
 
 public class MainPage extends Application{
 	
@@ -25,6 +25,7 @@ public class MainPage extends Application{
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		
 		stage = primaryStage;
 		// Create new Game Instance
 		Game game = new Game();
@@ -34,15 +35,16 @@ public class MainPage extends Application{
 		Button btnHelp = new Button("Help");
 		
 		// Create new BorderPane
-		BorderPane mainPane = new BorderPane();
+		VBox mainPane = new VBox();
 
 		// Set mainPane Background
 		mainPane.setBackground(new Background(new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 		
 		// Place help and start buttons
-		mainPane.setBottom(btnStart);
-		mainPane.setTop(btnHelp);
+		mainPane.getChildren().addAll(btnStart, btnHelp);
+		mainPane.setAlignment(Pos.CENTER);
+		mainPane.setSpacing(20);
 
 		// Display start screen
 		mainScene = new Scene(mainPane, 600, 600);
@@ -51,7 +53,7 @@ public class MainPage extends Application{
 		primaryStage.show();
 		
 		btnHelp.setOnMouseClicked(e ->{
-	
+			getHostServices().showDocument("https://www.catan.com/en/download/?SoC_rv_Rules_091907.pdf");
 			
 		});
 		btnStart.setOnMouseClicked(e -> {

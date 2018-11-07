@@ -68,10 +68,7 @@ public class Game {
 		
 		
 		// Set up Board
-		board = new Board(800, 800);
-		board.createTiles();
-		board.createChits();
-		board.setIntersections();
+		
 		// Do first turn that has weird order
 		
 		
@@ -137,6 +134,10 @@ public class Game {
 						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");
 
 			}
+			board = new Board(800, 800);
+			board.createTiles();
+			board.createChits();
+			board.setIntersections();
 			
 		});
 		
