@@ -8,10 +8,11 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.control.Button;
 
 public class Game {
-	
+	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
 	private final int NUMBER_OF_PLAYERS = 4;
 	private boolean isWinner = false;
 	private Player winner;
@@ -22,6 +23,7 @@ public class Game {
 	private static Scene gameScene;
 	private static Scene mainMenuScene;
 	private Board board;
+	private static BorderPane gamePane;
 
 	
 	
@@ -80,11 +82,16 @@ public class Game {
 	// Method to setup the GUI
 	private void setUpGUI() {
 		
+		gamePane = new BorderPane();
 		
 		// Pane for Player Name Entry
 		FlowPane playerPane = new FlowPane(5, 5);
 		playerPane.setPadding(new Insets(5,5,5,5));
 		
+		// Test if tiles align by placing in pane and displaying
+				gamePane.setBackground(new Background(new BackgroundImage(BACKGROUND_IMAGE, BackgroundRepeat.NO_REPEAT,
+						BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
 		Button btnContinue = new Button("Continue");
 		
 		// Create 4 labels and 4 text fields for player name entry
@@ -96,6 +103,7 @@ public class Game {
 		
 		// Add Button to flow pane
 		playerPane.getChildren().add(btnContinue);
+		gamePane.setLeft(playerPane);
 		// Display Player pane
 		gameScene = new Scene(playerPane, 200, 400);
 		stage.setScene(gameScene);
@@ -152,6 +160,16 @@ public class Game {
 	
 	public static Scene getScene() {
 		return gameScene;
+	}
+	
+	// Getter and Setter for BorderPane
+	
+	public static BorderPane getPane() {
+		return gamePane;
+	}
+	
+	public static void setPane(BorderPane pane) {
+		gamePane = pane;
 	}
 	
 }

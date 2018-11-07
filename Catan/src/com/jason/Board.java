@@ -15,11 +15,12 @@ import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 
 public class Board {
 	
 	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
-	
+	private BorderPane gamePane;
 	// Amount of each type of tile and chit
 	private final int[] TILE_TYPE_AMOUNTS = {1, 4, 4, 4, 3, 3};
 	private final int[] CHIT_TYPE_AMOUNTS = {1,2,2,2,2,2,2,2,2,1};
@@ -47,6 +48,7 @@ public class Board {
 	private Pane pane = new Pane();
 	
 	public Board(double width, double height) {
+		gamePane = Game.getPane();
 		gameScene = Game.getScene();
 		stage = Game.getStage();
 		this.width = width;
@@ -80,10 +82,10 @@ public class Board {
 			pane.getChildren().add(tile);
 		}
 		
-	
-		Scene scene = new Scene(pane, width, height);
-		scene.getStylesheets().add("/com/jason/resource/catan.css");
-		stage.setScene(scene);
+		gamePane.setCenter(pane);
+		//Scene scene = new Scene(pane, width, height);
+		//scene.getStylesheets().add("/com/jason/resource/catan.css");
+		//stage.setScene(scene);
 	}
 	
 	public void createChits() {
