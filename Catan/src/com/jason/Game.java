@@ -89,8 +89,8 @@ public class Game {
 		playerPane.setPadding(new Insets(5,5,5,5));
 		
 		// Test if tiles align by placing in pane and displaying
-				gamePane.setBackground(new Background(new BackgroundImage(BACKGROUND_IMAGE, BackgroundRepeat.NO_REPEAT,
-						BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+		gamePane.setBackground(new Background(new BackgroundImage(BACKGROUND_IMAGE, BackgroundRepeat.NO_REPEAT,
+			BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
 		Button btnContinue = new Button("Continue");
 		
@@ -105,7 +105,7 @@ public class Game {
 		playerPane.getChildren().add(btnContinue);
 		gamePane.setLeft(playerPane);
 		// Display Player pane
-		gameScene = new Scene(playerPane, 200, 400);
+		gameScene = new Scene(gamePane, 900, 900);
 		stage.setScene(gameScene);
 		stage.show();
 		
@@ -133,6 +133,10 @@ public class Game {
 				for(int i = 0; i< NUMBER_OF_PLAYERS; i++) {
 					players.add(new Player(tfPlayerNames.get(i).getText()));
 				}	
+				board = new Board(800, 800);
+				board.createTiles();
+				board.createChits();
+				board.setIntersections();
 			}
 			
 			// Test to display player creation
@@ -142,10 +146,7 @@ public class Game {
 						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");
 
 			}
-			board = new Board(800, 800);
-			board.createTiles();
-			board.createChits();
-			board.setIntersections();
+			
 			
 		});
 		
