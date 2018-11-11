@@ -152,6 +152,7 @@ public class Game {
 				board.createTiles();
 				board.createChits();
 				board.setIntersections();
+				board.setConnections();
 			}
 			
 			// Test to display player creation

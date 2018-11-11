@@ -33,6 +33,7 @@ public class Board {
 										{46,48},{39,47,51},{45,50,54},{41,49},{48,52,},{44,51,53},{52,54},{49,53}};
 	
 	private ArrayList<Intersection> listOfIntersections = new ArrayList<>();
+	private static ArrayList<Connection> connections = new ArrayList<>();
 	private static int intersectionNumbers = 1;
 	// Board width and height
 	private double width;
@@ -183,6 +184,55 @@ public class Board {
 		
 	}
 	
+	public void setConnections() {
+		int numConnectionsCreated = 0;
+		ArrayList<Connection> addedConnection = new ArrayList<>();
+		for(Intersection intersection: listOfIntersections) {
+			intersection.createConnection();
+			/*
+			ArrayList<Intersection> relatedIntersections = intersection.getRelated();
+			for(Intersection related: relatedIntersections) {
+				
+			
+				if(listOfConnections.size() == 0) {
+					listOfConnections.add(new Connection(intersection, related));
+					numConnectionsCreated++;
+				}
+				else {
+					for(Connection connection : listOfConnections) {
+						if(connection.getIntersections().contains(intersection) && connection.getIntersections().contains(related)) {
+							// Don't create
+						} else {
+							addedConnection.add(new Connection(intersection, related));
+							numConnectionsCreated++;
+						}
+					}
+					
+				}
+				
+			}
+			for(Connection connection : addedConnection) {
+				listOfConnections.add(connection);
+			}
+			addedConnection.clear();
+			System.out.println(numConnectionsCreated);
+			/*
+			ArrayList<Intersection> relatedIntersections = intersection.getRelated();
+			if(intersection.getNumConnections() < relatedIntersections.size()) {
+				
+				for(Intersection relatedInter : relatedIntersections) {
+					Connection connection = new Connection();
+					connection.setIntersections(intersection, relatedInter);
+					intersection.increaseConnectionNum();
+					relatedInter.increaseConnectionNum();
+				}
+			} */
+		}
+		
+		System.out.println("NUMBER OF CONNECTIONS: " + Connection.getNumConnections());
+		
+	}
+	
 	public class Intersection {
 		
 		
@@ -192,6 +242,8 @@ public class Board {
 		private ArrayList<Intersection> relatedIntersections = new ArrayList<>();
 		private Button roundBtn;
 		private boolean hasSettlement = false;
+		private int numConnections = 0;
+		
 		
 		public Intersection(int x, int y) {
 			this.point[0] = x;
@@ -200,12 +252,50 @@ public class Board {
 			intersectionNumbers++;
 		}
 		
+		public void increaseConnectionNum() {
+			numConnections++;
+		}
+		
+		public void createConnection() {
+			int numIntersCreated = 0;
+			boolean createConnection = true;
+			if(connections.size() == 0) {
+				for(Intersection related : relatedIntersections) {
+					numIntersCreated++;
+					connections.add(new Connection(this, related));
+				}
+			} else {
+				for(Intersection related : relatedIntersections) {
+					createConnection = true;
+					for(Connection connection : connections) {
+						if((connection.getIntersections().contains(this) && connection.getIntersections().contains(related))) {
+							createConnection = false;
+						}
+					}
+					if(createConnection) {
+						connections.add(new Connection(this, related));
+						numIntersCreated++;
+					}
+				}
+			}
+			System.out.println(numIntersCreated); 
+
+		} 
+		
+		public int getNumConnections() {
+			return numConnections;
+		}
+		
 		public int getX() {
 			return point[0];
 		}
 		
 		public int getY() {
 			return point[1];
+		}
+		
+		public int getIntersectionNumber() {
+			return intersectionNumber;
 		}
 		
 		public void createCircle() {
@@ -257,6 +347,10 @@ public class Board {
 			});
 		}
 		
+		public int getNumRelatedIntersections() {
+			return relatedIntersections.size();
+		}
+		
 		public void addTile(Tile tile) {
 			connectedTile.add(tile);
 		}
@@ -271,6 +365,9 @@ public class Board {
 			"-fx-max-height: 20px;");
 		}
 		
+		public ArrayList<Intersection> getRelated() {
+			return relatedIntersections;
+		}
 		public void setRelated() {
 			System.out.println("\nRelated Intersections for intersection " + intersectionNumber + ": ");
 			for(int i = 0; i<related[intersectionNumber].length; i++) {
@@ -278,6 +375,7 @@ public class Board {
 				relatedIntersections.add(listOfIntersections.get(related[intersectionNumber][i] -1));
 			}
 		}
+		
 		
 		@Override
 		public String toString() {
