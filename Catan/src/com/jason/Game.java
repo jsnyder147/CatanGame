@@ -138,6 +138,7 @@ public class Game {
 			
 			// If all players names have been entered create new players
 			if(allPlayersEntered) {
+				System.out.println("\nPLAYERS ENTERED\n");
 				for(int i = 0; i< NUMBER_OF_PLAYERS; i++) {
 					players.add(new Player(tfPlayerNames.get(i).getText()));
 				}
@@ -153,10 +154,13 @@ public class Game {
 				board.createChits();
 				board.setIntersections();
 				board.setConnections();
+				board.finishBoard();
+				System.out.println("\n\nBOARD CREATED\n\n");
 			}
 			
 			// Test to display player creation
 			for(Player player: players) {
+				System.out.println("\n\nTESTING DICE\n\n");
 				int die[] = player.roll();
 				System.out.println("Player Number " + (players.indexOf(player) + 1) + "\nPlayer Name: " + player.getName() +
 						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");

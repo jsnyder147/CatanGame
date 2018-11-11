@@ -42,6 +42,7 @@ public class Board {
 	// List of Tiles and Chits
 	private ArrayList<Tile> tiles = new ArrayList<>();
 	private ArrayList<Chit> chits = new ArrayList<>();
+
 	
 	// Pane and stage to display Tiles, chits, and intersections
 	// will be moved to game after testing is complete
@@ -50,6 +51,7 @@ public class Board {
 	private Pane pane = new Pane();
 	
 	public Board(double width, double height) {
+		System.out.println("\n\nBOARD BEING CREATED\n\n");
 		gamePane = Game.getPane();
 		gameScene = Game.getScene();
 		stage = Game.getStage();
@@ -58,6 +60,7 @@ public class Board {
 	}
 	
 	public void createTiles() {
+		System.out.println("\nTILES BEING CREATED\n");
 		// Set board width for tile binding
 		Tile.setDimensions(width);
 		
@@ -86,12 +89,10 @@ public class Board {
 		
 		gamePane.setCenter(pane);
 		gamePane.setAlignment(pane, Pos.CENTER);
-		//Scene scene = new Scene(pane, width, height);
-		//scene.getStylesheets().add("/com/jason/resource/catan.css");
-		//stage.setScene(scene);
 	}
 	
 	public void createChits() {
+		System.out.println("\nCHITS BEING CREATED\n");
 		// Create Chits
 		int count = 0;
 		for(int chitType: CHIT_TYPE_AMOUNTS) {
@@ -102,6 +103,7 @@ public class Board {
 			}
 			count++;
 		}
+		System.out.println("NUMBER OF CHITS: " + count + "\n");
 		
 		// Shuffle Chits
 		Collections.shuffle(chits);
@@ -110,7 +112,6 @@ public class Board {
 		int tileCount = 0;
 		for(Chit chit : chits) {
 			Tile currentTile = tiles.get(tileCount);
-			System.out.println(chit);
 			
 			// If Tile is Desert skip tile by increasing tile count
 			// So that a chit is not placed on tile
@@ -139,6 +140,7 @@ public class Board {
 	}
 	
 	public void setIntersections() {
+		System.out.println("\nINTERSECTIONS BEING CREATED\n");
 		boolean createIntersection = true;
 		int count = 0;
 		for(Tile tile: tiles) {
@@ -162,20 +164,10 @@ public class Board {
 					count++;
 				}
 			}
-			/*
-			System.out.println("Tile " + (tiles.indexOf(tile) + 1) + ":\n");
-			for(int i = 0; i < 6; i++) {
-				System.out.print("X" + (i+1) + ": " +intersect[i][0] + " Y" + (i+1) + ": " + intersect[i][1] + "\t");
-			} */
-		}
-		System.out.println("\n\n\n" + count);
-		for(Intersection intersection: listOfIntersections) {
-			//intersection.setRelated();
-			intersection.createCircle();
-			System.out.println(intersection);
-			
 
 		}
+		System.out.println("NUMBER OF INTERSECTIONS: " + count + "\n");
+		
 		
 		for(Intersection intersection: listOfIntersections) {
 			intersection.setRelated();
@@ -185,52 +177,42 @@ public class Board {
 	}
 	
 	public void setConnections() {
-		int numConnectionsCreated = 0;
-		ArrayList<Connection> addedConnection = new ArrayList<>();
+		System.out.println("\nCONNECTIONS BEING CREATED\n");
 		for(Intersection intersection: listOfIntersections) {
 			intersection.createConnection();
-			/*
-			ArrayList<Intersection> relatedIntersections = intersection.getRelated();
-			for(Intersection related: relatedIntersections) {
-				
-			
-				if(listOfConnections.size() == 0) {
-					listOfConnections.add(new Connection(intersection, related));
-					numConnectionsCreated++;
-				}
-				else {
-					for(Connection connection : listOfConnections) {
-						if(connection.getIntersections().contains(intersection) && connection.getIntersections().contains(related)) {
-							// Don't create
-						} else {
-							addedConnection.add(new Connection(intersection, related));
-							numConnectionsCreated++;
-						}
-					}
-					
-				}
-				
-			}
-			for(Connection connection : addedConnection) {
-				listOfConnections.add(connection);
-			}
-			addedConnection.clear();
-			System.out.println(numConnectionsCreated);
-			/*
-			ArrayList<Intersection> relatedIntersections = intersection.getRelated();
-			if(intersection.getNumConnections() < relatedIntersections.size()) {
-				
-				for(Intersection relatedInter : relatedIntersections) {
-					Connection connection = new Connection();
-					connection.setIntersections(intersection, relatedInter);
-					intersection.increaseConnectionNum();
-					relatedInter.increaseConnectionNum();
-				}
-			} */
 		}
 		
-		System.out.println("NUMBER OF CONNECTIONS: " + Connection.getNumConnections());
+		Connection.setConnectionsList(connections);
 		
+		for(int i = 0; i < 7; i++) {
+			//connections.get(i).setRelated();
+			System.out.println(connections.get(i).getRelated());
+		}
+		System.out.println("NUMBER OF CONNECTIONS: " + Connection.getNumConnections() + "\n");
+		
+	}
+	
+	public void finishBoard() {
+		System.out.println("\nFINALIZING BOARD\n");
+		
+		for(Connection connection : connections) {
+			/*
+			Label label = connection.displayLabel();
+			label.setLayoutX(connection.getX());
+			label.setLayoutY(connection.getY());
+			pane.getChildren().add(label); */
+			pane.getChildren().add(connection.displayConnection());
+			
+		}
+		
+		
+		Connection.trySetting();
+		// Place buttons for Connections
+		
+		// Place buttons for Intersections
+		for(Intersection intersection: listOfIntersections) {
+			intersection.createCircle();
+		}
 	}
 	
 	public class Intersection {
@@ -240,9 +222,9 @@ public class Board {
 		private ArrayList<Tile> connectedTile = new ArrayList<>();
 		private int point[] = {0,0};
 		private ArrayList<Intersection> relatedIntersections = new ArrayList<>();
+		private ArrayList<Connection> relatedConnections = new ArrayList<>();
 		private Button roundBtn;
 		private boolean hasSettlement = false;
-		private int numConnections = 0;
 		
 		
 		public Intersection(int x, int y) {
@@ -252,17 +234,15 @@ public class Board {
 			intersectionNumbers++;
 		}
 		
-		public void increaseConnectionNum() {
-			numConnections++;
-		}
-		
 		public void createConnection() {
-			int numIntersCreated = 0;
+
 			boolean createConnection = true;
 			if(connections.size() == 0) {
 				for(Intersection related : relatedIntersections) {
-					numIntersCreated++;
-					connections.add(new Connection(this, related));
+					Connection connection = new Connection(this, related);
+					connections.add(connection);
+					relatedConnections.add(connection);
+					
 				}
 			} else {
 				for(Intersection related : relatedIntersections) {
@@ -270,20 +250,21 @@ public class Board {
 					for(Connection connection : connections) {
 						if((connection.getIntersections().contains(this) && connection.getIntersections().contains(related))) {
 							createConnection = false;
+							relatedConnections.add(connection);
 						}
 					}
 					if(createConnection) {
-						connections.add(new Connection(this, related));
-						numIntersCreated++;
+						Connection connection = new Connection(this, related);
+						connections.add(connection);
+						relatedConnections.add(connection);
 					}
 				}
 			}
-			System.out.println(numIntersCreated); 
 
-		} 
+		}
 		
-		public int getNumConnections() {
-			return numConnections;
+		public ArrayList<Connection> getRelatedConnections() {
+			return relatedConnections;
 		}
 		
 		public int getX() {
@@ -298,13 +279,11 @@ public class Board {
 			return intersectionNumber;
 		}
 		
+		public boolean getHasSettlement() {
+			return hasSettlement;
+		}
+		
 		public void createCircle() {
-			/*
-			Label label = new Label(String.valueOf(intersectionNumber));
-			label.setLayoutX(point[0]);
-			label.setLayoutY(point[1]);
-			pane.getChildren().add(label);
-			*/
 			// Create Button
 			roundBtn = new Button(String.valueOf(intersectionNumber));
 			
@@ -332,10 +311,10 @@ public class Board {
 					roundBtn.setLayoutY(point[1] - 20);
 					roundBtn.setStyle("-fx-graphic: url('/com/jason/resource/pieces/BlueSettlement.png'); " +
 					"-fx-background-color: transparent; " +
-					"-fx-min-width: 30px; " + 
-					"-fx-min-height: 30px; " + 
-					"-fx-max-width: 30px; " + 
-					"-fx-max-height: 30px;");
+					"-fx-min-width: 20px; " + 
+					"-fx-min-height:20px; " + 
+					"-fx-max-width: 20px; " + 
+					"-fx-max-height: 20px;");
 					for(Intersection aIntersection: relatedIntersections) {
 		
 		
@@ -368,10 +347,9 @@ public class Board {
 		public ArrayList<Intersection> getRelated() {
 			return relatedIntersections;
 		}
+		
 		public void setRelated() {
-			System.out.println("\nRelated Intersections for intersection " + intersectionNumber + ": ");
 			for(int i = 0; i<related[intersectionNumber].length; i++) {
-				System.out.println(listOfIntersections.get(related[intersectionNumber][i] - 1));
 				relatedIntersections.add(listOfIntersections.get(related[intersectionNumber][i] -1));
 			}
 		}
@@ -380,16 +358,6 @@ public class Board {
 		@Override
 		public String toString() {
 			return intersectionNumber + " ";
-			/*
-			String details = "Intersection " + intersectionNumber + " Connected Tiles: \n";
-			int count = 0;
-			for(Tile tile: connectedTile) {
-				details += "Tile " + count + ": " + tile + " Chit #: " +  tile.getChit() + "\n";
-				count++;
-			} */
-			
-			//return details;
-			//return "Intersection " + intersectionNumber + ": Connected tiles: " + connectedTile + "(" + point[0] + ", " + point[1] + ")\n";
 		}
 	}
 	
