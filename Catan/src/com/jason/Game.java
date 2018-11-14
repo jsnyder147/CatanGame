@@ -191,7 +191,9 @@ public class Game {
 			pane.getChildren().add(dicePane);
 			pane.getChildren().add(btn2);
 			RollDice dice = new RollDice(400,400);
-			dice.setDice(1,5);
+			
+			
+			dice.setDice(4,3);
 			dice.showStage();
 			dice.animate();
 			dice.roll();

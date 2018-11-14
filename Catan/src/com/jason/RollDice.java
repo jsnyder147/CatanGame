@@ -1,32 +1,11 @@
 package com.jason;
-import javafx.application.Application;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box; 
-import javafx.scene.shape.DrawMode;
-import javafx.scene.control.Button;
-import javafx.geometry.Point3D;
-import javafx.scene.Camera;
-import javafx.scene.AmbientLight;
-import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.scene.Parent;
-import javafx.scene.SubScene;
-import javafx.scene.SceneAntialiasing;
+
 import javafx.scene.layout.*;
-import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.geometry.*;
-import javafx.scene.transform.Translate;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-
-
 import javafx.scene.Group; 
 import javafx.scene.PerspectiveCamera; 
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage; 
 import javafx.animation.TranslateTransition;
 import javafx.animation.RotateTransition;
 import javafx.util.Duration;
@@ -34,17 +13,12 @@ import javafx.scene.transform.Rotate;
 import javafx.animation.*;
 import org.fxyz3d.shapes.primitives.CuboidMesh;
 
-
 public class RollDice {
 	
 	private double width = 500;
 	private double height = 500;
-	private int dieOneRoll;
-	private int dieTwoRoll;
-	private Group newGroup;
+
 	private ParallelTransition pt;
-	private Scene scene;
-	private Stage stage;
 	private CuboidMesh dieOne;
 	private CuboidMesh dieTwo;
 	private Group root;
@@ -54,6 +28,7 @@ public class RollDice {
 	private Group everything;
 	private Group everything2;
 	private Pane pane;
+	private Image BACKGROUND_IMAGE = new Image("com/jason/resource/roll/rollBoard.png");
 	
 	public RollDice(double width, double height) {
 		
@@ -64,20 +39,12 @@ public class RollDice {
 
 	}
 	
-	public void setDieOneRoll(int dieOneRoll) {
-		this.dieOneRoll = dieOneRoll;
-	}
-	
-	public void setDieTwoRoll(int dieTwoRoll) {
-		this.dieTwoRoll = dieTwoRoll;
-	}
-	
 	public void setDice(int dieOneNum, int dieTwoNum) {
 		double diceWidth = width/10;
 		double diceHeight = width/10;
 		double diceDepth = diceWidth;
 		
-		
+		// Set Rotate Axis
 		Rotate rxDie = new Rotate(0,0,0,0, Rotate.X_AXIS);
 		Rotate ryDie = new Rotate(0,0,0,0, Rotate.Y_AXIS);
 		Rotate rzDie = new Rotate(0,0,0,0, Rotate.Z_AXIS);
@@ -85,14 +52,12 @@ public class RollDice {
 		Rotate ryDie2 = new Rotate(0,0,0,0, Rotate.Y_AXIS);
 		Rotate rzDie2 = new Rotate(0,0,0,0, Rotate.Z_AXIS);
 		
-		
 		// Die One Rolls
 		if(dieOneNum == 1) {
 			rxDie.setAngle(0);
 			ryDie.setAngle(0);
 			rzDie.setAngle(0);
 		}
-		
 		if(dieOneNum == 2) {
 			rxDie.setAngle(320);
 			ryDie.setAngle(20);
@@ -120,7 +85,6 @@ public class RollDice {
 		}
 		
 		// Die Two Rolls
-		
 		if(dieTwoNum == 1) {
 			rxDie2.setAngle(0);
 			ryDie2.setAngle(0);
@@ -184,7 +148,7 @@ public class RollDice {
 	}
 
 	public void showStage() {
-		Image BACKGROUND_IMAGE = new Image("com/jason/resource/roll/rollBoard.png");
+		
 		// Set Scene and Stage
 		PerspectiveCamera camera = new PerspectiveCamera(true);
 		Rotate ryDie = new Rotate(0,0,0,0, Rotate.Y_AXIS);
@@ -269,17 +233,10 @@ public class RollDice {
         pt = new ParallelTransition(rtX, rtX2, rtY, rtY2, trZ, trZ2, sc);
 	}
 	
-	
 	public void roll() {
 		pt.setCycleCount(1);
 		pt.play();
 		pt.setOnFinished(e->{
-		/*	try {
-			Thread.sleep(3000);
-			} catch(Exception ex) {
-				
-			}
-			stage.close(); */
 		});
 	}
 	
