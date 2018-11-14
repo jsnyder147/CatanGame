@@ -178,16 +178,18 @@ public class Board {
 	
 	public void setConnections() {
 		System.out.println("\nCONNECTIONS BEING CREATED\n");
+		
+		// Create Connections
 		for(Intersection intersection: listOfIntersections) {
 			intersection.createConnection();
 		}
 		
+		// Set List Of Connections
 		Connection.setConnectionsList(connections);
 		
-		for(int i = 0; i < 7; i++) {
-			//connections.get(i).setRelated();
-			System.out.println(connections.get(i).getRelated());
-		}
+		// Set Related Connections
+		Connection.setRelated();
+		
 		System.out.println("NUMBER OF CONNECTIONS: " + Connection.getNumConnections() + "\n");
 		
 	}
@@ -195,20 +197,15 @@ public class Board {
 	public void finishBoard() {
 		System.out.println("\nFINALIZING BOARD\n");
 		
+
+		
+		
+
+		// Place buttons for Connections
 		for(Connection connection : connections) {
-			/*
-			Label label = connection.displayLabel();
-			label.setLayoutX(connection.getX());
-			label.setLayoutY(connection.getY());
-			pane.getChildren().add(label); */
 			pane.getChildren().add(connection.displayConnection());
 			
 		}
-		
-		
-		Connection.trySetting();
-		// Place buttons for Connections
-		
 		// Place buttons for Intersections
 		for(Intersection intersection: listOfIntersections) {
 			intersection.createCircle();

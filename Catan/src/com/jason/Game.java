@@ -27,6 +27,7 @@ public class Game {
 	private Board board;
 	private static BorderPane gamePane;
 	private Button btnContinue;
+	private static Pane dicePane = new Pane();
 
 	
 	
@@ -40,6 +41,7 @@ public class Game {
 	public void startGame() {
 		// Setup Board and Players
 		setUp();
+		
 		
 		/*
 		// While all players VP < 10
@@ -156,6 +158,10 @@ public class Game {
 				board.setConnections();
 				board.finishBoard();
 				System.out.println("\n\nBOARD CREATED\n\n");
+				
+				
+				// Start First Turn
+				firstTurn();
 			}
 			
 			// Test to display player creation
@@ -165,12 +171,36 @@ public class Game {
 				System.out.println("Player Number " + (players.indexOf(player) + 1) + "\nPlayer Name: " + player.getName() +
 						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");
 
-			}
-			
+			}		
 			
 		});
 		
 		
+		
+	}
+	
+	private void firstTurn() {
+		Button btn = new Button("Roll");
+		Button btn2 = new Button("Close");
+		Pane pane = new Pane();
+		gamePane.setRight(pane);
+		pane.getChildren().add(btn);
+		
+		btn.setOnMouseClicked(ev->{
+			pane.getChildren().remove(0);
+			pane.getChildren().add(dicePane);
+			pane.getChildren().add(btn2);
+			RollDice dice = new RollDice(400,400);
+			dice.setDice(1,5);
+			dice.showStage();
+			dice.animate();
+			dice.roll();
+		});
+		btn2.setOnMouseClicked(e -> {
+			pane.getChildren().remove(0);
+			pane.getChildren().remove(0);
+		});
+
 		
 	}
 	
@@ -192,5 +222,10 @@ public class Game {
 	public static void setPane(BorderPane pane) {
 		gamePane = pane;
 	}
+	
+	public static Pane getDicePane() {
+		return dicePane;
+	}
+	
 	
 }
