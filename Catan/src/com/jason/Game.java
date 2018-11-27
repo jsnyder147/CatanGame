@@ -16,6 +16,8 @@ import javafx.scene.control.Button;
 public class Game {
 	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
 	private final int NUMBER_OF_PLAYERS = 4;
+	private boolean nextPlayer = false;
+	private int playerNum;
 	private boolean isWinner = false;
 	private Player winner;
 	private ArrayList<Player> players = new ArrayList<>();
@@ -26,9 +28,9 @@ public class Game {
 	private static Scene mainMenuScene;
 	private Board board;
 	private static BorderPane gamePane;
+	private VBox playerPane;
 	private Button btnContinue;
 	private static Pane dicePane = new Pane();
-
 	
 	
 	public Game() {
@@ -91,7 +93,8 @@ public class Game {
 		gamePane.getStylesheets().add("com/jason/resource/catan.css");
 		
 		// Pane for Player Name Entry
-		VBox playerPane = new VBox();
+		playerPane = new VBox();
+		playerPane.setPrefWidth(200);
 		playerPane.setPadding(new Insets(5,5,5,5));
 		playerPane.getStyleClass().add("playerNamePane");
 		
@@ -180,11 +183,126 @@ public class Game {
 	}
 	
 	private void firstTurn() {
+		Label lblPlayer = new Label();
+		playerNum = 1;
+		Button btnRoll = new Button("Roll");
+		Button btnClose = new Button("Close");
+		
+		lblPlayer.setText("Player " + playerNum);
+		playerPane.getChildren().addAll(lblPlayer, btnRoll);
+		btnRoll.setOnMouseClicked(e -> {
+			//Roll
+			
+		});
+		
+		for(int i = playerNum; i <= NUMBER_OF_PLAYERS; i++) {
+			lblPlayer.setText("Player " + i);
+			playerPane.getChildren().addAll(lblPlayer, btnRoll);
+			
+		}
+		
+		/*
+		Label lblPlayer = new Label();
+		playerNum = 1;
 		Button btn = new Button("Roll");
 		Button btn2 = new Button("Close");
 		Pane pane = new Pane();
-		gamePane.setRight(pane);
-		pane.getChildren().add(btn);
+		int[] testRoll = {7,7,7,3};
+		ArrayList<Integer> rolls = new ArrayList<>();
+		ArrayList<Integer> needReRoll = new ArrayList<>();
+		for(int i = 0; i <4; i++) {
+			int roll[] = {0,0};
+			roll = players.get(i).roll();
+			rolls.add(testRoll[i]);
+			//rolls.add((roll[0] + roll[1]));
+			if(i != 0) {
+				for(int j = 0; j< rolls.size(); j++){
+					if(rolls.get(j) == rolls.get(i)){
+						if(j != i) {
+							needReRoll.add(j);
+							needReRoll.add(i);
+						}
+					}
+				}
+			
+			}
+			System.out.println("Roll: " + rolls.get(i) + "\n");
+		}
+		
+		
+		
+		
+	
+		for(int i = 0; i <needReRoll.size(); i++) {
+			int reRoll = needReRoll.get(i);
+			for(int j = i+1; j< needReRoll.size(); j++ ) {
+				if(reRoll == needReRoll.get(j)) {
+					needReRoll.remove(j);
+				}
+			}
+		} 
+		
+		// Test Roll and Re-Rolls
+		System.out.println("Re-rolls size: " + needReRoll.size());
+		for(Integer reroll : needReRoll) {
+			System.out.println("ReRoll : " + reroll);
+		}
+		
+		while(needReRoll.size() > 0) {
+			
+			for(int i = 0; i< needReRoll.size(); i++) {
+				players.get(needReRoll.get(i)).roll();
+				
+			}
+			
+		}
+		
+		
+		
+		
+		// Roll Dice for each player to determine Order
+		//for(Player player : players) {
+
+				lblPlayer.setText("Player " + playerNum + ": " + players.get(0).getName());
+				playerPane.getChildren().add(lblPlayer);
+				playerPane.getChildren().add(btn);
+			
+				btn.setOnMouseClicked(ev->{
+					playerPane.getChildren().remove(1);
+					//pane.getChildren().add(dicePane);
+					playerPane.getChildren().add(dicePane);
+					playerPane.getChildren().add(btn2);
+					//pane.getChildren().add(dicePane);
+					//pane.getChildren().add(btn2);
+					
+					RollDice dice = new RollDice(300,300);
+					int die[] = players.get(0).roll();
+					System.out.println("Die One: " + die[0] + " Die 2: " + die[1]);
+					dice.setDice(4,5);
+					dice.showStage();
+					dice.animate();
+					dice.roll();
+				});
+				
+				btn2.setOnMouseClicked(e -> {
+					playerPane.getChildren().remove(0);
+					playerPane.getChildren().remove(0);
+					playerPane.getChildren().remove(0);
+					pane.getChildren().remove(0);
+					playerNum++;
+					nextPlayer=true;
+				});
+
+			// Increase Player Number
+			
+			
+			
+			*/
+			
+		//}
+
+		//
+		/*
 		
 		btn.setOnMouseClicked(ev->{
 			pane.getChildren().remove(0);
@@ -203,7 +321,7 @@ public class Game {
 			pane.getChildren().remove(0);
 		});
 
-		
+		*/
 	}
 	
 	// Getters for stage and scene

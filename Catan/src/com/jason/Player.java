@@ -120,5 +120,7 @@ public class Player {
 	public int[] roll() {
 		return dice.roll();
 	}
+	
+	
 
 }
