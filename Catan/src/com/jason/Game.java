@@ -193,152 +193,8 @@ public class Game {
 	}
 	
 	private void firstTurn() {
-		//doRolls(players);
+		doRolls(players);
 		
-		// Set Up Dice Pane
-		dicePane = new HBox();
-		dicePane.setPrefWidth(playerPane.getPrefWidth() - (playerPane.getPrefWidth() / 10));
-		dicePane.setSpacing(playerPane.getPrefWidth() / 20);
-		dicePane.setAlignment(Pos.CENTER);
-		dicePane.setPadding(new Insets(10,0,10,0));
-		
-		// Set up Player Number Label
-		playerNum = 1;
-		Label lblPlayer = new Label();
-		lblPlayer.setText("Player " + playerNum);
-		lblPlayer.setPadding(new Insets(10,0,10,0));
-		
-		
-		// Set up Roll and Next buttons
-		Button btnRoll = new Button("Roll");
-		Button btnNext = new Button("Next");
-		btnRoll.setPrefWidth(dicePane.getPrefWidth() / 2);
-		btnNext.setPrefWidth(dicePane.getPrefWidth() / 2);
-		
-		
-		// Add player label and roll button to playerPane and setup
-		playerPane.getChildren().addAll(lblPlayer, btnRoll);
-		playerPane.setAlignment(Pos.TOP_CENTER);
-		
-		// Get roll for each player
-		for(Player player : players) {
-			player.roll();
-			System.out.println("Player " + playerNum + " Roll: Die One: " + player.getRoll()[0] + ", Die Two: " + player.getRoll()[1]);
-		}
-		
-		// Roll Button Event Listener
-		btnRoll.setOnMouseClicked(e -> {
-			Dice dice = new Dice();
-			// Disable Roll Button and Next Button
-			btnRoll.setDisable(true);
-			btnNext.setDisable(true);
-			
-			// Create Dice Instances
-			dieOne = new ImageView();
-			dieTwo = new ImageView();
-			
-			// Set up Dice
-			dieOne.setFitWidth((dicePane.getPrefWidth() / 2) - 10);
-			dieOne.setFitHeight(dieOne.getFitWidth());
-			dieTwo.setFitWidth(dieOne.getFitWidth());
-			dieTwo.setFitHeight(dieOne.getFitWidth());
-			
-			// Add Dice to Dicepane
-			dicePane.getChildren().addAll(dieOne, dieTwo);
-			
-			// Add Next Button and Dicepane to playerPane
-			playerPane.getChildren().addAll(dicePane, btnNext);
-			
-			// Animation
-			EventHandler<ActionEvent> eventHandler = ev -> {
-				// Get New Roll
-				int roll[] = dice.roll();
-				
-				// TEST Display Roll to console
-				System.out.println("Roll : " + roll[0] + ", " + roll[1]);
-				
-				// Set Dice Images to random roll
-				dieOne.setImage(diceImages[roll[0] -1]);
-				dieTwo.setImage(diceImages[roll[1] -1]);
-				
-			};
-			
-			// Set Up Animation
-			Timeline animation = new Timeline(new KeyFrame(Duration.millis(300), eventHandler));
-			animation.setCycleCount(9);
-			
-			// On finish Animation
-			animation.setOnFinished( event -> {
-				dieOne.setImage(diceImages[players.get(playerNum-1).getRoll()[0] - 1]);
-				dieTwo.setImage(diceImages[players.get(playerNum-1).getRoll()[1] -1 ]);
-				btnNext.setDisable(false);
-				
-				// Increase playerNum
-				if(playerNum <= NUMBER_OF_PLAYERS) {
-					playerNum++;
-				}
-
-			});
-			animation.play();
-			
-		});
-		
-		// Next Button Event Listener
-		btnNext.setOnMouseClicked(e -> {
-			// If PlayerNum is <= 4 set up next player
-			if(playerNum <= NUMBER_OF_PLAYERS) {
-				btnRoll.setDisable(false);
-				playerPane.getChildren().removeAll(dicePane, btnNext);
-				dicePane.getChildren().removeAll(dieOne, dieTwo);
-				lblPlayer.setText("Player " + playerNum);
-			
-			// If PlayerNum is > 4 remove roll info and start game
-			} else {
-				
-				dicePane.getChildren().removeAll(dieOne, dieTwo);
-				playerPane.getChildren().removeAll(lblPlayer, btnRoll, btnNext, dicePane);
-				
-				ArrayList<Player> reRollPlayers = checkMultiples(players);
-				if(reRollPlayers.size() > 0) {
-					ArrayList<Label> tie = new ArrayList<>();
-					tie.add(new Label("There is a\nTie Between:"));
-					tie.get(0).setTextAlignment(TextAlignment.CENTER);
-					tie.get(0).setPadding(new Insets(10,0,0,0));
-					for(Player player : reRollPlayers) {
-						tie.add(new Label("Player " + player.getPlayerNum()));
-					}
-					Button btnContinue = new Button("Re-Roll");
-					btnContinue.setPrefWidth(dicePane.getPrefWidth() / 2);
-					btnContinue.setPadding(new Insets(10,0,0,0));
-					playerPane.getChildren().addAll(tie);
-					playerPane.getChildren().add(btnContinue);
-					
-					btnContinue.setOnMouseClicked(ev -> {
-						playerPane.getChildren().removeAll(tie);
-						playerPane.getChildren().remove(btnContinue);
-						doRolls(reRollPlayers);
-					});
-					
-					//
-				} else { 
-					
-					board.setIntersections();
-					board.setConnections();
-					board.finishBoard();
-					System.out.println("\n\nBOARD CREATED\n\n");
-				}
-				
-			}
-			
-		});
-		
-		
-		if(endFirstTurn) {
-		board.setIntersections();
-		board.setConnections();
-		board.finishBoard();
-		System.out.println("\n\nBOARD CREATED\n\n");
-		}
 		
 	}
 	
@@ -467,6 +323,8 @@ public class Game {
 					
 					// If PlayerNum is > 4 remove roll info and start game
 					} else {
+						dicePane.getChildren().removeAll(dieOne, dieTwo);
+						playerPane.getChildren().removeAll(lblPlayer, btnRoll, btnNext, dicePane);
 						ArrayList<Player> reRollPlayers = checkMultiples(players);
 						if(reRollPlayers.size() > 0) {
 							ArrayList<Label> tie = new ArrayList<>();
