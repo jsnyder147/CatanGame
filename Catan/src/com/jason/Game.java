@@ -1,6 +1,9 @@
 package com.jason;
 
 import java.util.ArrayList;
+
+import javafx.scene.image.ImageView;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
@@ -31,6 +34,11 @@ public class Game {
 	private VBox playerPane;
 	private Button btnContinue;
 	private static Pane dicePane = new Pane();
+	private ImageView dieOne;
+	private ImageView dieTwo;
+	private Image diceImages[] = {new Image("/com/jason/resource/dice/one.png"), new Image("/com/jason/resource/dice/two.png"),
+			new Image("/com/jason/resource/dice/three.png"), new Image("/com/jason/resource/dice/four.png"),
+			new Image("/com/jason/resource/dice/five.png"), new Image("/com/jason/resource/dice/six.png")};
 	
 	
 	public Game() {
@@ -164,7 +172,7 @@ public class Game {
 				firstTurn();
 			}
 			
-			// Test to display player creation
+			/*Test to display player creation
 			for(Player player: players) {
 				System.out.println("\n\nTESTING DICE\n\n");
 				player.roll();
@@ -173,7 +181,7 @@ public class Game {
 						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");
 
 			}		
-			
+			*/
 		});
 		
 		
@@ -185,18 +193,26 @@ public class Game {
 		playerNum = 1;
 		Button btnRoll = new Button("Roll");
 		Button btnNext = new Button("Next");
+
 		
 		lblPlayer.setText("Player " + playerNum);
 		playerPane.getChildren().addAll(lblPlayer, btnRoll);
 		
-		
+		for(Player player : players) {
+			player.roll();
+			System.out.println("Player " + playerNum + " Roll: Die One: " + player.getRoll()[0] + ", Die Two: " + player.getRoll()[1]);
+		}
 		
 		// Roll Button Event Listener
 		btnRoll.setOnMouseClicked(e -> {
 			// ADD ROLL LOGIC
 			// Disable Roll Button and add Close Button
 			btnRoll.setDisable(true);
-			playerPane.getChildren().add(btnNext);
+			int dice[] = players.get(playerNum -1).getRoll();
+			dieOne = new ImageView(diceImages[players.get(playerNum-1).getRoll()[0] - 1] );
+			dieTwo = new ImageView(diceImages[players.get(playerNum-1).getRoll()[1] -1 ]);
+			playerPane.getChildren().addAll(dieOne, dieTwo, btnNext);
+
 			
 			// Increase playerNum
 			if(playerNum <= NUMBER_OF_PLAYERS) {
@@ -212,15 +228,13 @@ public class Game {
 			// If PlayerNum is <= 4 set up next player
 			if(playerNum <= NUMBER_OF_PLAYERS) {
 				btnRoll.setDisable(false);
-				playerPane.getChildren().remove(btnNext);
+				playerPane.getChildren().removeAll(dieOne, dieTwo, btnNext);
 				lblPlayer.setText("Player " + playerNum);
 			
 			// If PlayerNum is > 4 remove roll info and start game
 			} else {
 				
-				playerPane.getChildren().remove(lblPlayer);
-				playerPane.getChildren().remove(btnRoll);
-				playerPane.getChildren().remove(btnNext);
+				playerPane.getChildren().removeAll(lblPlayer, btnRoll, btnNext, dieOne, dieTwo);
 				board.setIntersections();
 				board.setConnections();
 				board.finishBoard();
