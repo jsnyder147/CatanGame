@@ -124,6 +124,11 @@ public class Player {
 		roll = dice.roll();
 	}
 	
+	// TEST METHOD
+	public void setRoll(int[] roll) {
+		this.roll = roll;
+	}
+	
 	public int[] getRoll() {
 		return roll;
 	}
