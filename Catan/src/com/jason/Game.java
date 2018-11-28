@@ -118,7 +118,7 @@ public class Game {
 		
 		// Display Player pane
 		BorderPane.setAlignment(playerPane, Pos.CENTER);
-		gameScene = new Scene(gamePane, 900, 1200);
+		gameScene = new Scene(gamePane, 1200, 1100);
 		stage.setScene(gameScene);
 		stage.show();
 		
@@ -157,10 +157,7 @@ public class Game {
 				board = new Board(1000, 1000);
 				board.createTiles();
 				board.createChits();
-				board.setIntersections();
-				board.setConnections();
-				board.finishBoard();
-				System.out.println("\n\nBOARD CREATED\n\n");
+				
 				
 				
 				// Start First Turn
@@ -170,7 +167,8 @@ public class Game {
 			// Test to display player creation
 			for(Player player: players) {
 				System.out.println("\n\nTESTING DICE\n\n");
-				int die[] = player.roll();
+				player.roll();
+				int die[] = player.getRoll();
 				System.out.println("Player Number " + (players.indexOf(player) + 1) + "\nPlayer Name: " + player.getName() +
 						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");
 
@@ -186,20 +184,53 @@ public class Game {
 		Label lblPlayer = new Label();
 		playerNum = 1;
 		Button btnRoll = new Button("Roll");
-		Button btnClose = new Button("Close");
+		Button btnNext = new Button("Next");
 		
 		lblPlayer.setText("Player " + playerNum);
 		playerPane.getChildren().addAll(lblPlayer, btnRoll);
+		
+		
+		
+		// Roll Button Event Listener
 		btnRoll.setOnMouseClicked(e -> {
-			//Roll
+			// ADD ROLL LOGIC
+			// Disable Roll Button and add Close Button
+			btnRoll.setDisable(true);
+			playerPane.getChildren().add(btnNext);
+			
+			// Increase playerNum
+			if(playerNum <= NUMBER_OF_PLAYERS) {
+				playerNum++;
+			}
+			
+			
 			
 		});
 		
-		for(int i = playerNum; i <= NUMBER_OF_PLAYERS; i++) {
-			lblPlayer.setText("Player " + i);
-			playerPane.getChildren().addAll(lblPlayer, btnRoll);
+		// Next Button Event Listener
+		btnNext.setOnMouseClicked(e -> {
+			// If PlayerNum is <= 4 set up next player
+			if(playerNum <= NUMBER_OF_PLAYERS) {
+				btnRoll.setDisable(false);
+				playerPane.getChildren().remove(btnNext);
+				lblPlayer.setText("Player " + playerNum);
 			
-		}
+			// If PlayerNum is > 4 remove roll info and start game
+			} else {
+				
+				playerPane.getChildren().remove(lblPlayer);
+				playerPane.getChildren().remove(btnRoll);
+				playerPane.getChildren().remove(btnNext);
+				board.setIntersections();
+				board.setConnections();
+				board.finishBoard();
+				System.out.println("\n\nBOARD CREATED\n\n");
+			}
+			
+		});
+		
+		
+	
 		
 		
 	}

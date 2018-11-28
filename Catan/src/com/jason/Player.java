@@ -16,6 +16,7 @@ public class Player {
 	private ArrayList<Road> roads;
 	private ArrayList<City> cities;
 	private Dice dice = new Dice();
+	private int roll[] = {0,0};
 	
 	
 	public Player() {
@@ -117,8 +118,12 @@ public class Player {
 		this.cities = cities;
 	}
 	
-	public int[] roll() {
-		return dice.roll();
+	public void roll() {
+		roll = dice.roll();
+	}
+	
+	public int[] getRoll() {
+		return roll;
 	}
 	
 	
