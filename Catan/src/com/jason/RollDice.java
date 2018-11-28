@@ -38,7 +38,8 @@ public class RollDice {
 		this.width = width;
 		this.height = height;
 		
-		pane = Game.getDicePane();
+		//pane = Game.getDicePane();
+		pane = new Pane();
 		light.setColor(Color.WHITE);
 		
 

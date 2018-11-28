@@ -9,11 +9,16 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.control.Button;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 
 
 public class Game {
@@ -32,8 +37,9 @@ public class Game {
 	private Board board;
 	private static BorderPane gamePane;
 	private VBox playerPane;
+	private HBox dicePane;
 	private Button btnContinue;
-	private static Pane dicePane = new Pane();
+	//private static Pane dicePane = new Pane();
 	private ImageView dieOne;
 	private ImageView dieTwo;
 	private Image diceImages[] = {new Image("/com/jason/resource/dice/one.png"), new Image("/com/jason/resource/dice/two.png"),
@@ -102,7 +108,6 @@ public class Game {
 		
 		// Pane for Player Name Entry
 		playerPane = new VBox();
-		playerPane.setPrefWidth(200);
 		playerPane.setPadding(new Insets(5,5,5,5));
 		playerPane.getStyleClass().add("playerNamePane");
 		
@@ -127,8 +132,12 @@ public class Game {
 		// Display Player pane
 		BorderPane.setAlignment(playerPane, Pos.CENTER);
 		gameScene = new Scene(gamePane, 1200, 1100);
+		System.out.println("GAME SCENE WIDTH: " + gameScene.getWidth());
 		stage.setScene(gameScene);
 		stage.show();
+		
+		// Set PlayerPane Width
+		playerPane.setPrefWidth(gameScene.getWidth() / 6);
 		
 		// set button event listener
 		btnContinue.setOnAction(e -> {
@@ -166,22 +175,10 @@ public class Game {
 				board.createTiles();
 				board.createChits();
 				
-				
-				
 				// Start First Turn
 				firstTurn();
 			}
 			
-			/*Test to display player creation
-			for(Player player: players) {
-				System.out.println("\n\nTESTING DICE\n\n");
-				player.roll();
-				int die[] = player.getRoll();
-				System.out.println("Player Number " + (players.indexOf(player) + 1) + "\nPlayer Name: " + player.getName() +
-						" Color: "+player.getColor() + "Roll Die 1: " + die[0] + " Roll Die 2: " + die[1] + "\n");
-
-			}		
-			*/
 		});
 		
 		
@@ -189,15 +186,32 @@ public class Game {
 	}
 	
 	private void firstTurn() {
-		Label lblPlayer = new Label();
+		// Set Up Dice Pane
+		dicePane = new HBox();
+		dicePane.setPrefWidth(playerPane.getPrefWidth() - (playerPane.getPrefWidth() / 10));
+		dicePane.setSpacing(playerPane.getPrefWidth() / 20);
+		dicePane.setAlignment(Pos.CENTER);
+		dicePane.setPadding(new Insets(10,0,10,0));
+		
+		// Set up Player Number Label
 		playerNum = 1;
+		Label lblPlayer = new Label();
+		lblPlayer.setText("Player " + playerNum);
+		lblPlayer.setPadding(new Insets(10,0,10,0));
+		
+		
+		// Set up Roll and Next buttons
 		Button btnRoll = new Button("Roll");
 		Button btnNext = new Button("Next");
-
+		btnRoll.setPrefWidth(dicePane.getPrefWidth() / 2);
+		btnNext.setPrefWidth(dicePane.getPrefWidth() / 2);
 		
-		lblPlayer.setText("Player " + playerNum);
+		
+		// Add player label and roll button to playerPane and setup
 		playerPane.getChildren().addAll(lblPlayer, btnRoll);
+		playerPane.setAlignment(Pos.TOP_CENTER);
 		
+		// Get roll for each player
 		for(Player player : players) {
 			player.roll();
 			System.out.println("Player " + playerNum + " Roll: Die One: " + player.getRoll()[0] + ", Die Two: " + player.getRoll()[1]);
@@ -205,21 +219,58 @@ public class Game {
 		
 		// Roll Button Event Listener
 		btnRoll.setOnMouseClicked(e -> {
-			// ADD ROLL LOGIC
-			// Disable Roll Button and add Close Button
+			Dice dice = new Dice();
+			// Disable Roll Button and Next Button
 			btnRoll.setDisable(true);
-			int dice[] = players.get(playerNum -1).getRoll();
-			dieOne = new ImageView(diceImages[players.get(playerNum-1).getRoll()[0] - 1] );
-			dieTwo = new ImageView(diceImages[players.get(playerNum-1).getRoll()[1] -1 ]);
-			playerPane.getChildren().addAll(dieOne, dieTwo, btnNext);
+			btnNext.setDisable(true);
+			
+			// Create Dice Instances
+			dieOne = new ImageView();
+			dieTwo = new ImageView();
+			
+			// Set up Dice
+			dieOne.setFitWidth((dicePane.getPrefWidth() / 2) - 10);
+			dieOne.setFitHeight(dieOne.getFitWidth());
+			dieTwo.setFitWidth(dieOne.getFitWidth());
+			dieTwo.setFitHeight(dieOne.getFitWidth());
+			
+			// Add Dice to Dicepane
+			dicePane.getChildren().addAll(dieOne, dieTwo);
+			
+			// Add Next Button and Dicepane to playerPane
+			playerPane.getChildren().addAll(dicePane, btnNext);
+			
+			// Animation
+			EventHandler<ActionEvent> eventHandler = ev -> {
+				// Get New Roll
+				int roll[] = dice.roll();
+				
+				// TEST Display Roll to console
+				System.out.println("Roll : " + roll[0] + ", " + roll[1]);
+				
+				// Set Dice Images to random roll
+				dieOne.setImage(diceImages[roll[0] -1]);
+				dieTwo.setImage(diceImages[roll[1] -1]);
+				
+			};
+			
+			// Set Up Animation
+			Timeline animation = new Timeline(new KeyFrame(Duration.millis(300), eventHandler));
+			animation.setCycleCount(9);
+			
+			// On finish Animation
+			animation.setOnFinished( event -> {
+				dieOne.setImage(diceImages[players.get(playerNum-1).getRoll()[0] - 1]);
+				dieTwo.setImage(diceImages[players.get(playerNum-1).getRoll()[1] -1 ]);
+				btnNext.setDisable(false);
+				
+				// Increase playerNum
+				if(playerNum <= NUMBER_OF_PLAYERS) {
+					playerNum++;
+				}
 
-			
-			// Increase playerNum
-			if(playerNum <= NUMBER_OF_PLAYERS) {
-				playerNum++;
-			}
-			
-			
+			});
+			animation.play();
 			
 		});
 		
@@ -228,13 +279,15 @@ public class Game {
 			// If PlayerNum is <= 4 set up next player
 			if(playerNum <= NUMBER_OF_PLAYERS) {
 				btnRoll.setDisable(false);
-				playerPane.getChildren().removeAll(dieOne, dieTwo, btnNext);
+				playerPane.getChildren().removeAll(dicePane, btnNext);
+				dicePane.getChildren().removeAll(dieOne, dieTwo);
 				lblPlayer.setText("Player " + playerNum);
 			
 			// If PlayerNum is > 4 remove roll info and start game
 			} else {
 				
-				playerPane.getChildren().removeAll(lblPlayer, btnRoll, btnNext, dieOne, dieTwo);
+				playerPane.getChildren().removeAll(lblPlayer, btnRoll, btnNext, dicePane);
+				dicePane.getChildren().removeAll(dieOne, dieTwo);
 				board.setIntersections();
 				board.setConnections();
 				board.finishBoard();
@@ -268,9 +321,9 @@ public class Game {
 		gamePane = pane;
 	}
 	
-	public static Pane getDicePane() {
+	/*public static Pane getDicePane() {
 		return dicePane;
-	}
+	} */
 	
 	
 }
