@@ -47,7 +47,7 @@ public class Tile extends Polygon{
 		double tileWidth = tiles.get(0).width;
 		double tileHeight = tiles.get(0).width;
 		double horizontalCenter = (boardWidth/2.0) - (tileWidth/2.0);
-		double y = (boardHeight - (5 * tileHeight)) /4.0;
+		double y = (boardHeight - (5 * tileHeight)) /15.0;
 		double x = 0;
 		int tilesMade = 0;
 		int repeat = 0;

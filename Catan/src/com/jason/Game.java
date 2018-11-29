@@ -322,7 +322,7 @@ public class Game {
 			};
 			
 			// Set Up Animation
-			Timeline animation = new Timeline(new KeyFrame(Duration.millis(100), eventHandler));
+			Timeline animation = new Timeline(new KeyFrame(Duration.millis(250), eventHandler));
 			animation.setCycleCount(9);
 			
 			// On finish Animation
