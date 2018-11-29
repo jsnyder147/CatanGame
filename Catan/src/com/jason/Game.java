@@ -2,11 +2,11 @@ package com.jason;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Stack;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -20,7 +20,6 @@ import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.geometry.Rectangle2D;
 
 
 
@@ -45,9 +44,9 @@ public class Game {
 	private VBox playerPane;
 	private HBox dicePane;
 	private Button btnContinue;
-	//private static Pane dicePane = new Pane();
 	private ImageView dieOne;
 	private ImageView dieTwo;
+	private final Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
 	private Image diceImages[] = {new Image("/com/jason/resource/dice/one.png"), new Image("/com/jason/resource/dice/two.png"),
 			new Image("/com/jason/resource/dice/three.png"), new Image("/com/jason/resource/dice/four.png"),
 			new Image("/com/jason/resource/dice/five.png"), new Image("/com/jason/resource/dice/six.png")};
@@ -126,7 +125,10 @@ public class Game {
 		
 		// Create 4 labels and 4 text fields for player name entry
 		for(int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-			lblPlayerNames.add(new Label("Player " + (i + 1) + " Name: "));
+			Label label = new Label("Player " + (i + 1) + " Name: ");
+			label.setTextFill(colors[i]);
+			lblPlayerNames.add(label);
+			//lblPlayerNames.add(new Label("Player " + (i + 1) + " Name: "));
 			tfPlayerNames.add(new TextField());
 			playerPane.getChildren().addAll(lblPlayerNames.get(i), tfPlayerNames.get(i));
 		}
@@ -189,13 +191,18 @@ public class Game {
 			}
 			
 		});
-		
-		
-		
+
 	}
 	
 	// Method to Check if First Roll Has Duplicates
 	private ArrayList<Player> checkMultiples(ArrayList<Player> players) {
+		int highestRoll = 0;
+		for(Player player : players) {
+			int roll = player.getRollSum();
+			if(roll > highestRoll) {
+				highestRoll = roll;
+			}
+		}
 		// Declare Array List to Hold Players that Have Duplicate Rolls
 		ArrayList<Player> reRollPlayers = new ArrayList<>();
 		
@@ -215,8 +222,8 @@ public class Game {
 					continue;
 				}
 				
-				// If two players rolled same amount add that player to reRoll arrayList
-				if(nextPlayer.getRollSum() == player.getRollSum()) {
+				// If two players rolled same amount AND they have the highest roll, add that player to reRoll arrayList
+				if(nextPlayer.getRollSum() == player.getRollSum() && player.getRollSum() == highestRoll) {
 					if(!reRollPlayers.contains(player)) {
 						reRollPlayers.add(player);
 					}
@@ -230,19 +237,30 @@ public class Game {
 			}
 		}
 		
+		Player highRoller = players.get(0);
+		if(reRollPlayers.size() == 0) {
+			
+			for(Player player: players) {
+				if(player.getRollSum() > highRoller.getRollSum()) {
+					highRoller = player;
+				}
+			}
+			
+			int highIndex = this.players.indexOf(highRoller);
+			int distance = this.players.size() - highIndex;
+			Collections.rotate(this.players, distance);
+			for(Player player : this.players) {
+				System.out.println("Player " + player.getPlayerNum());
+			}
+		}
+		
 		/*****      FOR TESTING    ******
 		System.out.println("RE-ROLL PLAYERS: ");
 		for(Player player : reRollPlayers) {
 			System.out.print(player.getPlayerNum() + " ");
 		}
 		******					   ******/
-		
-		// Remove Players who are tied from players list
-		for(Player player : reRollPlayers) {
-			if(this.players.contains(player)) {
-				this.players.remove(player);
-			}
-		}
+
 		
 		// Return List of players who rolled the same number
 		return reRollPlayers;
@@ -277,7 +295,7 @@ public class Game {
 		
 		/******* 	FOR TESTING	   ******
 		int count = 0;
-		int rolls[][][] = {{{1,4}, {1,4}, {4,1}, {5,1}}, {{1,4}, {1,5}, {1,4}},{{1,5}, {1,6}}};
+		int rolls[][][] = {{{6,6}, {1,4}, {6,6}, {5,1}}, {{1,4}, {1,5}, {1,4}},{{1,5}, {1,6}}};
 		for(Player player : players) {
 			player.setRoll(rolls[counter][count]);
 			System.out.println("Player " + player.getPlayerNum() + " Roll: Die One: " + player.getRoll()[0] + ", Die Two: " + player.getRoll()[1]);
@@ -290,7 +308,8 @@ public class Game {
 		for(Player player : players) {
 			player.roll();
 			System.out.println("Player " + player.getPlayerNum() + " Roll: Die One: " + player.getRoll()[0] + ", Die Two: " + player.getRoll()[1]);
-		}
+		} 
+
 
 		// Roll Button Event Listener
 		btnRoll.setOnMouseClicked(e -> {
@@ -364,6 +383,7 @@ public class Game {
 				dicePane.getChildren().removeAll(dieOne, dieTwo);
 				playerPane.getChildren().removeAll(lblPlayer, btnRoll, btnNext, dicePane);
 				
+
 				// Check If there are any ties and assign tied players
 				ArrayList<Player> reRollPlayers = checkMultiples(players);
 				
@@ -417,8 +437,6 @@ public class Game {
 	
 	// Method to display final Player Order
 	private void showPlayerOrder() {
-		// Sort Players by first turn rolls
-		Collections.sort(this.players);
 		
 		// List of Labels for Player Names
 		ArrayList<Label> turnOrder = new ArrayList<>();

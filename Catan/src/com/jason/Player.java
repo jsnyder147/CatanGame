@@ -1,11 +1,12 @@
 package com.jason;
 
 import java.util.ArrayList;
+import javafx.scene.paint.Color;
 
 public class Player implements Comparable<Player>{
 	
-	private String color;
-	private final String colors[] = {"Red", "Green", "Blue", "Yellow"};
+	private Color color;
+	private final Color colors[] = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
 	private static int num = 0;
 	private String name;
 	private int number;
@@ -31,12 +32,12 @@ public class Player implements Comparable<Player>{
 		playerNum = num;
 	}
 	
-	public String getColor() {
+	public Color getColor() {
 		return color;
 	}
 
 
-	public void setColor(String color) {
+	public void setColor(Color color) {
 		this.color = color;
 	}
 
