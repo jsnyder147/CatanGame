@@ -196,8 +196,12 @@ public class Game {
 	}
 	
 	private void firstTurn() {
+		// First Turn Order Rolls
 		doRolls(players);
 		
+
+		
+
 		
 	}
 	
@@ -378,21 +382,42 @@ public class Game {
 						System.out.println(player.getPlayerNum());
 					}
 
-					// Sort Players by roll
-					Collections.sort(this.players);
-					for(Player player: this.players) {
-						System.out.println("Player " + player.getPlayerNum() + ": Roll: " + player.getRollSum()); 
-					}
+					
 					dicePane.getChildren().removeAll(dieOne, dieTwo);
 					playerPane.getChildren().removeAll(lblPlayer, btnRoll, btnNext, dicePane);
-					board.setIntersections();
-					board.setConnections();
-					board.finishBoard();
-					System.out.println("\n\nBOARD CREATED\n\n");
 					endFirstTurn = true;
-					return;
+					showPlayerOrder();
 				}
 			}
+		});
+	}
+	
+	private void showPlayerOrder() {
+		// Sort Players by first turn rolls
+		Collections.sort(this.players);
+		ArrayList<Label> turnOrder = new ArrayList<>();
+		playerNum = 1;
+		turnOrder.add(new Label("Turn Order"));
+		for(Player player: this.players) {
+			turnOrder.add(new Label("Player " + playerNum + " "  + player.getName()));
+			System.out.println("Player " + player.getPlayerNum() + ": Roll: " + player.getRollSum());
+			player.setPlayerNum(playerNum);
+			playerNum++;
+		}
+		
+		turnOrder.get(turnOrder.size() -1).setPadding(new Insets(0,0,10,0));
+		Button btnStart = new Button("Start");
+		btnStart.setPrefWidth(dicePane.getPrefWidth() / 2);
+		playerPane.getChildren().addAll(turnOrder);
+		playerPane.getChildren().add(btnStart);
+		
+		btnStart.setOnMouseClicked(e -> {
+			playerPane.getChildren().removeAll(turnOrder);
+			playerPane.getChildren().removeAll(btnStart);
+			board.setIntersections();
+			board.setConnections();
+			board.finishBoard();
+			System.out.println("\n\nBOARD CREATED\n\n");
 		});
 	}
 	
