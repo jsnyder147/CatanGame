@@ -2,7 +2,7 @@ package com.jason;
 
 import java.util.ArrayList;
 
-public class Player {
+public class Player implements Comparable<Player>{
 	
 	private String color;
 	private final String colors[] = {"Red", "Green", "Blue", "Yellow"};
@@ -143,6 +143,16 @@ public class Player {
 	
 	public void setPlayerNum(int playerNum) {
 		this.playerNum = playerNum;
+	}
+
+	@Override
+	public int compareTo(Player o) {
+		if(this.getRollSum() > o.getRollSum()) {
+			return -1;
+		} else {
+			return 0;
+		}
+
 	}
 	
 	

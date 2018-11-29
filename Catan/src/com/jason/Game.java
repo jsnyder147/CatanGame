@@ -1,6 +1,7 @@
 package com.jason;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Stack;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
@@ -360,9 +361,10 @@ public class Game {
 					for(Player player : reRollPlayers) {
 						tie.add(new Label("Player " + player.getPlayerNum()));
 					}
-					Button btnContinue = new Button("Re-Roll");
+					Button btnContinue = new Button("Roll Again");
 					btnContinue.setPrefWidth(dicePane.getPrefWidth() / 2);
-					btnContinue.setPadding(new Insets(10,0,0,0));
+					tie.get(tie.size() - 1).setPadding(new Insets(0,0,10,0));
+					//btnContinue.setPadding(new Insets(10,0,0,0));
 					playerPane.getChildren().addAll(tie);
 					playerPane.getChildren().add(btnContinue);
 					
@@ -377,6 +379,10 @@ public class Game {
 					}
 
 					// Sort Players by roll
+					Collections.sort(this.players);
+					for(Player player: this.players) {
+						System.out.println("Player " + player.getPlayerNum() + ": Roll: " + player.getRollSum()); 
+					}
 					dicePane.getChildren().removeAll(dieOne, dieTwo);
 					playerPane.getChildren().removeAll(lblPlayer, btnRoll, btnNext, dicePane);
 					board.setIntersections();
