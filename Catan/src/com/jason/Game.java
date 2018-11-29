@@ -45,7 +45,6 @@ public class Game {
 	private VBox playerPane;
 	private HBox dicePane;
 	private Button btnContinue;
-	private boolean endFirstTurn = false;
 	//private static Pane dicePane = new Pane();
 	private ImageView dieOne;
 	private ImageView dieTwo;
@@ -186,7 +185,7 @@ public class Game {
 				board.createChits();
 				
 				// Start First Turn
-				firstTurn();
+				doRolls(players);
 			}
 			
 		});
@@ -195,38 +194,40 @@ public class Game {
 		
 	}
 	
-	private void firstTurn() {
-		// First Turn Order Rolls
-		doRolls(players);
-		
-
-		
-
-		
-	}
-	
+	// Method to Check if First Roll Has Duplicates
 	private ArrayList<Player> checkMultiples(ArrayList<Player> players) {
+		// Declare Array List to Hold Players that Have Duplicate Rolls
 		ArrayList<Player> reRollPlayers = new ArrayList<>();
-
+		
+		// Iterate through all players
 		for(int i = 0; i < players.size(); i++) {
+			// Get Each Player Reference
 			Player player = players.get(i);
+			
+			// Iterate through all players and compare to player
 			for(int j = 0; j < players.size(); j++) {
+				
+				// Get another player to compare to  player
 				Player nextPlayer = players.get(j);
+				
+				// If player is equal to player skip
 				if(player == nextPlayer) {
 					continue;
 				}
+				
+				// If two players rolled same amount add that player to reRoll arrayList
 				if(nextPlayer.getRollSum() == player.getRollSum()) {
 					if(!reRollPlayers.contains(player)) {
 						reRollPlayers.add(player);
-
 					}
-
-					
+				
+				// FOR SECOND ITERATION
+				// If player's roll is distinct and previously was not,
+				// Re-add player to players list
 				} else if(!this.players.contains(player)) {
 					this.players.add(player);
 				}
 			}
-			
 		}
 		
 		/*****      FOR TESTING    ******
@@ -243,8 +244,11 @@ public class Game {
 			}
 		}
 		
+		// Return List of players who rolled the same number
 		return reRollPlayers;
 	}
+	
+	// Method to do first Turn Rolls
 	private void doRolls(ArrayList<Player> players) {
 		// Set Up Dice Pane
 		dicePane = new HBox();
@@ -317,8 +321,9 @@ public class Game {
 				// Get New Roll
 				int roll[] = dice.roll();
 				
-				// TEST Display Roll to console
+				/*****			TEST DISPLAY ROLL				******
 				System.out.println("Roll : " + roll[0] + ", " + roll[1]);
+				******			END TEST DISPLAY ROLL			*****/
 				
 				// Set Dice Images to random roll
 				dieOne.setImage(diceImages[roll[0] -1]);
@@ -339,6 +344,7 @@ public class Game {
 
 			});
 			
+			// Start Dice Animation
 			animation.play();
 			
 		});
@@ -354,10 +360,16 @@ public class Game {
 			
 			// If PlayerNum is > 4 remove roll info and start game
 			} else {
+				//Remove Dice, Player Label, Roll Button, and Next Button
 				dicePane.getChildren().removeAll(dieOne, dieTwo);
 				playerPane.getChildren().removeAll(lblPlayer, btnRoll, btnNext, dicePane);
+				
+				// Check If there are any ties and assign tied players
 				ArrayList<Player> reRollPlayers = checkMultiples(players);
+				
+				// If Ties than roll again for tied players
 				if(reRollPlayers.size() > 0) {
+					// Add Tied label and players that are tied
 					ArrayList<Label> tie = new ArrayList<>();
 					tie.add(new Label("There is a\nTie Between:"));
 					tie.get(0).setTextAlignment(TextAlignment.CENTER);
@@ -365,39 +377,55 @@ public class Game {
 					for(Player player : reRollPlayers) {
 						tie.add(new Label("Player " + player.getPlayerNum()));
 					}
+					
+					// Setup roll again button and padding for label
 					Button btnContinue = new Button("Roll Again");
 					btnContinue.setPrefWidth(dicePane.getPrefWidth() / 2);
 					tie.get(tie.size() - 1).setPadding(new Insets(0,0,10,0));
-					//btnContinue.setPadding(new Insets(10,0,0,0));
+					
+					// Add Tied Labels and Roll again button
 					playerPane.getChildren().addAll(tie);
 					playerPane.getChildren().add(btnContinue);
 					
+					// Roll Again Event Listener
 					btnContinue.setOnMouseClicked(ev -> {
+						// Remove Tied Labels, and then Roll again
 						playerPane.getChildren().removeAll(tie);
 						playerPane.getChildren().remove(btnContinue);
 						doRolls(reRollPlayers);
 					});
+					
+				// If No ties Display Player Order
 				} else {
+					
+					/*****		FOR TESTING		******/
 					for(Player player : this.players) {
 						System.out.println(player.getPlayerNum());
 					}
-
+					/*****		END TESTING		******/
 					
+					// Remove Dice, Player label, Next Button, and Roll Button
 					dicePane.getChildren().removeAll(dieOne, dieTwo);
 					playerPane.getChildren().removeAll(lblPlayer, btnRoll, btnNext, dicePane);
-					endFirstTurn = true;
+					
+					// Call to Display player order
 					showPlayerOrder();
 				}
 			}
 		});
 	}
 	
+	// Method to display final Player Order
 	private void showPlayerOrder() {
 		// Sort Players by first turn rolls
 		Collections.sort(this.players);
+		
+		// List of Labels for Player Names
 		ArrayList<Label> turnOrder = new ArrayList<>();
 		playerNum = 1;
 		turnOrder.add(new Label("Turn Order"));
+		
+		// Iterate through players and add Labels to turnOrder list
 		for(Player player: this.players) {
 			turnOrder.add(new Label("Player " + playerNum + " "  + player.getName()));
 			System.out.println("Player " + player.getPlayerNum() + ": Roll: " + player.getRollSum());
@@ -405,24 +433,27 @@ public class Game {
 			playerNum++;
 		}
 		
+		// Setup up label padding and Start button
 		turnOrder.get(turnOrder.size() -1).setPadding(new Insets(0,0,10,0));
 		Button btnStart = new Button("Start");
 		btnStart.setPrefWidth(dicePane.getPrefWidth() / 2);
+		
+		// Add Labels and start button to playerPane
 		playerPane.getChildren().addAll(turnOrder);
 		playerPane.getChildren().add(btnStart);
 		
+		// Start Game event listener
 		btnStart.setOnMouseClicked(e -> {
+			// Remove turn order lables and start button
 			playerPane.getChildren().removeAll(turnOrder);
 			playerPane.getChildren().removeAll(btnStart);
+			
+			// Finish setting up board for play
 			board.setIntersections();
 			board.setConnections();
 			board.finishBoard();
 			System.out.println("\n\nBOARD CREATED\n\n");
 		});
-	}
-	
-	private void doRolls(Stack<Player> players) {
-		
 	}
 	
 	// Getters for stage and scene
@@ -443,10 +474,5 @@ public class Game {
 	public static void setPane(BorderPane pane) {
 		gamePane = pane;
 	}
-	
-	/*public static Pane getDicePane() {
-		return dicePane;
-	} */
-	
 	
 }
