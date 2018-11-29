@@ -2,6 +2,7 @@ package com.jason;
 
 import javafx.scene.layout.*;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.Group; 
@@ -12,6 +13,7 @@ import javafx.util.Duration;
 import javafx.scene.transform.Rotate;
 import javafx.animation.*;
 import org.fxyz3d.shapes.primitives.CuboidMesh;
+import javafx.scene.PointLight;
 
 public class RollDice {
 	
@@ -28,6 +30,7 @@ public class RollDice {
 	private Group everything;
 	private Group everything2;
 	private Pane pane;
+	private PointLight light = new PointLight();
 	private Image BACKGROUND_IMAGE = new Image("com/jason/resource/roll/rollBoard.png");
 	
 	public RollDice(double width, double height) {
@@ -35,7 +38,10 @@ public class RollDice {
 		this.width = width;
 		this.height = height;
 		
-		pane = Game.getDicePane();
+		//pane = Game.getDicePane();
+		pane = new Pane();
+		light.setColor(Color.WHITE);
+		
 
 	}
 	
@@ -152,6 +158,7 @@ public class RollDice {
 		// Set Scene and Stage
 		PerspectiveCamera camera = new PerspectiveCamera(true);
 		Rotate ryDie = new Rotate(0,0,0,0, Rotate.Y_AXIS);
+		Rotate rxDie = new Rotate(0,0,0,0, Rotate.X_AXIS);
 		ryDie.setAngle(90);
 		camera.getTransforms().add(ryDie);
 		camera.setTranslateX(0);
@@ -169,8 +176,11 @@ public class RollDice {
 		r.setHeight((width/3) * 2);
 		r.setFill(pattern);
 		everything3.getChildren().add(r);
-		everything3.getChildren().addAll(camera, everything2);
-		pane.getChildren().add(everything3);
+		//everything3.getChildren().addAll(camera, everything2);
+		pane.getChildren().addAll(r, camera, light, everything2);
+		rxDie.setAngle(90);
+		light.getTransforms().add(rxDie);
+		
 
 	}
 	

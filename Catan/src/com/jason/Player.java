@@ -16,6 +16,8 @@ public class Player {
 	private ArrayList<Road> roads;
 	private ArrayList<City> cities;
 	private Dice dice = new Dice();
+	private int roll[] = {0,0};
+	private int playerNum;
 	
 	
 	public Player() {
@@ -26,6 +28,7 @@ public class Player {
 		this.name = name;
 		this.color = colors[num];
 		num++;
+		playerNum = num;
 	}
 	
 	public String getColor() {
@@ -117,8 +120,31 @@ public class Player {
 		this.cities = cities;
 	}
 	
-	public int[] roll() {
-		return dice.roll();
+	public void roll() {
+		roll = dice.roll();
 	}
+	
+	// TEST METHOD
+	public void setRoll(int[] roll) {
+		this.roll = roll;
+	}
+	
+	public int[] getRoll() {
+		return roll;
+	}
+	
+	public int getRollSum() {
+		return roll[0] + roll[1];
+	}
+	
+	public int getPlayerNum() {
+		return playerNum;
+	}
+	
+	public void setPlayerNum(int playerNum) {
+		this.playerNum = playerNum;
+	}
+	
+	
 
 }
