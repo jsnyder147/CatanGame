@@ -26,6 +26,11 @@ import javafx.animation.Timeline;
 
 public class Game {
 	//TEST COUNTER
+	private static Player currentPlayer;
+	private static Label lblPlayerName = new Label();
+	private static int firstTurnIndex = 3;
+	private static boolean reround = false;
+	
 	private int counter = 0;
 	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
 	private final int NUMBER_OF_PLAYERS = 4;
@@ -33,7 +38,7 @@ public class Game {
 	private int playerNum;
 	private boolean isWinner = false;
 	private Player winner;
-	private ArrayList<Player> players = new ArrayList<>();
+	private static ArrayList<Player> players = new ArrayList<>();
 	private ArrayList<Label> lblPlayerNames = new ArrayList<>();
 	private ArrayList<TextField> tfPlayerNames = new ArrayList<>();
 	private static Stage stage;
@@ -46,7 +51,7 @@ public class Game {
 	private Button btnContinue;
 	private ImageView dieOne;
 	private ImageView dieTwo;
-	private final Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
+	private final Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.ORANGE};
 	private Image diceImages[] = {new Image("/com/jason/resource/dice/one.png"), new Image("/com/jason/resource/dice/two.png"),
 			new Image("/com/jason/resource/dice/three.png"), new Image("/com/jason/resource/dice/four.png"),
 			new Image("/com/jason/resource/dice/five.png"), new Image("/com/jason/resource/dice/six.png")};
@@ -91,11 +96,6 @@ public class Game {
 	private void setUp() {
 		// Setup GUI
 		setUpGUI();
-		
-		// Roll dice to see who goes first
-		
-		
-		// Set up Board
 		
 		// Do first turn that has weird order
 		
@@ -148,7 +148,7 @@ public class Game {
 		stage.centerOnScreen();
 		
 		// Set PlayerPane Width
-		playerPane.setPrefWidth(gameScene.getWidth() / 6);
+		playerPane.setPrefWidth(gameScene.getWidth() / 4);
 		
 		// set button event listener
 		btnContinue.setOnAction(e -> {
@@ -237,18 +237,24 @@ public class Game {
 			}
 		}
 		
+		// Set first player as player with highest roll
 		Player highRoller = players.get(0);
+		
+		// If there aren't any duplicate rolls assign turn order
 		if(reRollPlayers.size() == 0) {
 			
+			// Iterate through players and get highest roller;
 			for(Player player: players) {
 				if(player.getRollSum() > highRoller.getRollSum()) {
 					highRoller = player;
 				}
 			}
 			
+			// Reorder player list for final turn order
 			int highIndex = this.players.indexOf(highRoller);
 			int distance = this.players.size() - highIndex;
 			Collections.rotate(this.players, distance);
+			
 			for(Player player : this.players) {
 				System.out.println("Player " + player.getPlayerNum());
 			}
@@ -471,7 +477,43 @@ public class Game {
 			board.setConnections();
 			board.finishBoard();
 			System.out.println("\n\nBOARD CREATED\n\n");
+			
+			playTurn();
 		});
+	}
+	
+	private void playTurn() {
+		currentPlayer = players.get(0);
+		//Label lblPlayerName = new Label(players.get(0).getName());
+		lblPlayerName.setText(players.get(0).getName());
+		lblPlayerName.setTextFill(players.get(0).getColor());
+		Board.setPlayerColorIndex(players.get(0).getColor());
+		Board.setPlayerPane(playerPane);
+		
+		playerPane.getChildren().add(lblPlayerName);
+	}
+	
+	public static void nextTurn() {
+		if(players.indexOf(currentPlayer) == players.size() -1 || reround) {
+			reround = true;
+			currentPlayer = players.get(firstTurnIndex);
+			lblPlayerName.setText(currentPlayer.getName());
+			lblPlayerName.setTextFill(currentPlayer.getColor());
+			Board.setPlayerColorIndex(currentPlayer.getColor());
+			if(firstTurnIndex != 0) {
+				firstTurnIndex--;
+			}
+			else {
+				
+			}
+			
+		} else {
+			currentPlayer = players.get(players.indexOf(currentPlayer) + 1);
+			Board.setPlayerColorIndex(currentPlayer.getColor());
+			lblPlayerName.setText(currentPlayer.getName());
+			lblPlayerName.setTextFill(currentPlayer.getColor());
+			
+		}
 	}
 	
 	// Getters for stage and scene

@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 public class Player implements Comparable<Player>{
 	
 	private Color color;
-	private final Color colors[] = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW};
+	private final Color colors[] = {Color.RED, Color.GREEN, Color.BLUE, Color.ORANGE};
 	private static int num = 0;
 	private String name;
 	private int number;

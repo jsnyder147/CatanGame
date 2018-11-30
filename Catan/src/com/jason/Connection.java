@@ -11,7 +11,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.control.Label;
 
 public class Connection {
-	
+	private static Color intersectColor;
 	private Intersection intersectionOne;
 	private Intersection intersectionTwo;
 	private ArrayList<Intersection> intersections = new ArrayList<>();
@@ -21,6 +21,7 @@ public class Connection {
 	private boolean hasRoad = false;
 	private static int connectionNumbers = 1;
 	private int connectionNumber = 0;
+	private static String roadColor;
 	
 
 	public Connection(Intersection interOne, Intersection interTwo) {
@@ -84,9 +85,9 @@ public class Connection {
 			System.out.println("\nCONNECTION CLICKED\n");
 			
 			// If Connection doesn't have a road and one of the intersections has a settlement or city or related Connection has a road
-			if(!hasRoad && (interOne.getHasSettlement() || interTwo.getHasSettlement() ||  checkOtherConnection())) {
+			if(!hasRoad && (interOne.getHasSettlement(intersectColor) || interTwo.getHasSettlement(intersectColor) ||  checkOtherConnection())) {
 				hasRoad = true;
-				line.setStyle("-fx-stroke:#7E7EFF;");
+				line.setStyle("-fx-stroke:"+ roadColor);
 			} else {
 				System.out.println("Can't Build Here!");
 			}
@@ -136,6 +137,19 @@ public class Connection {
 			}
 		}
 		return false;
+	}
+	
+	public static void setIntersectColor(Color intersectColor) {
+		Connection.intersectColor = intersectColor;
+		if(intersectColor == Color.BLUE) {
+			roadColor = "#7E7EFF;";
+		} else if(intersectColor == Color.GREEN) {
+			roadColor = "#64B364;";
+		} else if(intersectColor == Color.ORANGE) {
+			roadColor = "#FFB264;";
+		} else if(intersectColor == Color.RED) {
+			roadColor = "#EB1C22;";
+		}
 	}
 
 

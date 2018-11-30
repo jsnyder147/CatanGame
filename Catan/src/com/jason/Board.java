@@ -1,6 +1,7 @@
 package com.jason;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -16,12 +17,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 
 public class Board {
+	// Test Additions
+	private static Button btnNext = new Button("Next");
+	private static VBox playerPane;
+	private static ArrayList<String> settlementList = new ArrayList<>();
+	private static ArrayList<Button> disabledIntersections = new ArrayList<>();
+	private static Color playerColor;
 	
 	private final Image BACKGROUND_IMAGE = new Image("/com/jason/resource/water.png");
 	private BorderPane gamePane;
+	private static boolean isFirstTurn = true;
 	// Amount of each type of tile and chit
 	private final int[] TILE_TYPE_AMOUNTS = {1, 4, 4, 4, 3, 3};
 	private final int[] CHIT_TYPE_AMOUNTS = {1,2,2,2,2,2,2,2,2,1};
@@ -42,12 +51,15 @@ public class Board {
 	// List of Tiles and Chits
 	private ArrayList<Tile> tiles = new ArrayList<>();
 	private ArrayList<Chit> chits = new ArrayList<>();
+	private String[] playerSettlements = {"-fx-graphic: url('/com/jason/resource/pieces/BlueSettlement.png'); " , "-fx-graphic: url('/com/jason/resource/pieces/GreenSettlement.png'); ",
+										"-fx-graphic: url('/com/jason/resource/pieces/OrangeSettlement.png'); ", "-fx-graphic: url('/com/jason/resource/pieces/RedSettlement.png'); "  };
 
 	
 	// Pane and stage to display Tiles, chits, and intersections
 	// will be moved to game after testing is complete
 	private static Stage stage;
 	private static Scene gameScene;
+	private static int playerColorIndex = 0;
 	private Pane pane = new Pane();
 	
 	public Board(double width, double height) {
@@ -57,6 +69,7 @@ public class Board {
 		stage = Game.getStage();
 		this.width = width;
 		this.height = height;
+		settlementList.addAll(Arrays.asList(playerSettlements));
 	}
 	
 	public void createTiles() {
@@ -222,6 +235,7 @@ public class Board {
 		private ArrayList<Connection> relatedConnections = new ArrayList<>();
 		private Button roundBtn;
 		private boolean hasSettlement = false;
+		private Color intersectColor;
 		
 		
 		public Intersection(int x, int y) {
@@ -276,8 +290,13 @@ public class Board {
 			return intersectionNumber;
 		}
 		
-		public boolean getHasSettlement() {
-			return hasSettlement;
+		public boolean getHasSettlement(Color color) {
+			if(color == intersectColor && hasSettlement) {
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
 		
 		public void createCircle() {
@@ -302,20 +321,46 @@ public class Board {
 			roundBtn.setOnMouseClicked(e -> {
 				
 				if(!hasSettlement) {
+					disabledIntersections.add(roundBtn);
+					String color = playerSettlements[playerColorIndex];
+					intersectColor = playerColor;
+					Connection.setIntersectColor(intersectColor);
 					hasSettlement = true;
 					System.out.println(this);
 					roundBtn.setLayoutX(point[0] -20);
 					roundBtn.setLayoutY(point[1] - 20);
-					roundBtn.setStyle("-fx-graphic: url('/com/jason/resource/pieces/BlueSettlement.png'); " +
+					roundBtn.setStyle(color +//"-fx-graphic: url('/com/jason/resource/pieces/BlueSettlement.png'); " +
 					"-fx-background-color: transparent; " +
 					"-fx-min-width: 20px; " + 
 					"-fx-min-height:20px; " + 
 					"-fx-max-width: 20px; " + 
 					"-fx-max-height: 20px;");
 					for(Intersection aIntersection: relatedIntersections) {
-		
+						
 		
 						aIntersection.changeButtonColor();
+					}
+					if(isFirstTurn) {
+						for(Intersection aIntersection : listOfIntersections) {
+							aIntersection.roundBtn.setDisable(true);
+						}
+						playerPane.getChildren().add(btnNext);
+						btnNext.setOnMouseClicked(event -> {
+							/*
+							if(playerColorIndex != playerSettlements.length -1) {
+								playerColorIndex++;
+							}
+							else {
+								playerColorIndex = 0;
+							} */
+							Game.nextTurn();
+							for(Intersection aIntersection : listOfIntersections) {
+								if(!disabledIntersections.contains(aIntersection.roundBtn)) {
+									aIntersection.roundBtn.setDisable(false);
+								}
+							}
+							
+						});
 					}
 				} else {
 					System.out.println("Can't build here");
@@ -332,6 +377,7 @@ public class Board {
 		}
 		
 		public void changeButtonColor() {
+			disabledIntersections.add(roundBtn);
 			roundBtn.setDisable(true);
 			roundBtn.setStyle("-fx-background-color:#ff0000; " +
 			"-fx-background-radius: 5em; " + 
@@ -358,6 +404,26 @@ public class Board {
 		}
 	}
 	
+	public static int getPlayerColorIndex() {
+		return playerColorIndex;
+	}
+	//Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW
+	public static void setPlayerColorIndex(Color color) {
+		if(color == Color.BLUE) {
+			playerColor = color;
+			playerColorIndex = 0;
+		} else if(color == Color.GREEN) {
+			playerColor = color;
+			playerColorIndex = 1;
+		} else if(color == Color.ORANGE) {
+			playerColor = color;
+			playerColorIndex = 2;
+		} else if(color == Color.RED) {
+			playerColor = color;
+			playerColorIndex = 3;
+		}
+	}
+	
 	// Getter for Scene and Stage
 	public static Stage getStage() {
 		return stage;
@@ -365,6 +431,14 @@ public class Board {
 	
 	public static Scene getScene() {
 		return gameScene;
+	}
+	
+	public static void setNextBtn(Button next) {
+		btnNext = next;
+	}
+	
+	public static void setPlayerPane(VBox playerPane) {
+		Board.playerPane = playerPane;
 	}
 
 }
